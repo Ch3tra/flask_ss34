@@ -1,0 +1,178 @@
+{% extends 'admin/layout_admin.html' %}
+{% block title %}
+    Edit Student
+{% endblock %}
+
+{% block main_content %}
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">Edit</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        <a href="{{ url_for('student') }}">
+            <button type="submit"
+                    class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-md px-3.5 py-2 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2">
+                Back to list
+            </button>
+        </a>
+    </div>
+
+
+    <div class="container" style="padding: 30px 40px; width: 60%; background-color: white; border-radius: 20px;">
+        <div class="h3">Modify Details</div>
+        {% for item in rows %}
+            <form class="form" action="{{ url_for('student_edited') }}" method="POST">
+                <div class="row">
+                    <div class="col-md-6 mt-md-0 mt-3">
+                        <input type="hidden" value="{{ item.sid }}" name="sid">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" value="{{ item.firstName }}" required name="firstname">
+                    </div>
+                    <div class="col-md-6 mt-md-0 mt-3">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" value="{{ item.lastName }}" required name="lastname">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mt-md-0 mt-3">
+                        <label>Birthday</label>
+                        <input type="date" class="form-control" value="{{ item.birthday }}" required name="birthday">
+                    </div>
+                    <div class="col-md-6 mt-md-0 mt-3">
+                        <label>Gender</label>
+                        <div class="d-flex align-items-center mt-2">
+                            <label class="option" required>
+                                <input type="radio" name="gender" value="Male" {% if item.gender == 'Male' %}checked{% endif %}>Male
+                                <span class="checkmark"></span>
+                            </label>
+                            <label class="option ms-4">
+                                <input type="radio" name="gender" value="Female" {% if item.gender == 'Female' %}checked{% endif %}>Female
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mt-md-0 mt-3">
+                        <label>Email</label>
+                        <input type="email" class="form-control" value="{{ item.email }}" required name="email">
+                    </div>
+                    <div class="col-md-6 mt-md-0 mt-3">
+                        <label>Phone Number</label>
+                        <input type="tel" class="form-control" value="{{ item.phoneNumber }}" required name="phone">
+                    </div>
+                </div>
+                <div class=" my-md-2 my-3">
+                    <label>Subject</label>
+                    <select id="sub" required name="subject">
+                        <option value="Math" {% if item.subject == 'Math' %}selected{% endif %}>Math</option>
+                        <option value="Science" {% if item.subject == 'Science' %}selected{% endif %}>Science</option>
+                        <option value="Social" {% if item.subject == 'Social' %}selected{% endif %}>English</option>
+                        <option value="Graphic Design" {% if item.subject == 'Graphic Design' %}selected{% endif %}>
+                            Graphic Design
+                        </option>
+                        <option value="Programming" {% if item.subject == 'Programming' %}selected{% endif %}>
+                            Programming
+                        </option>
+                    </select>
+                </div>
+                <button style="margin-top: 15px" type="submit"
+                        class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 font-medium rounded-lg text-md px-3.5 py-2 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2"
+                >
+                    SAVE
+                </button>
+            </form>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+
+{% block style %}
+    .wrapper label {
+    display: block;
+    padding-bottom: 0.2rem;
+    }
+
+    .wrapper .form .row {
+    padding: 0.6rem 0;
+    }
+
+    .wrapper .form .row .form-control {
+    box-shadow: none;
+    }
+
+    .wrapper .form .option {
+    position: relative;
+    padding-left: 20px;
+    cursor: pointer;
+    }
+
+    .wrapper .form .option input {
+    opacity: 0;
+    }
+
+    .wrapper .option{
+    top: 7px;
+    }
+
+    .wrapper .form .checkmark {
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    height: 20px;
+    width: 20px;
+    border: 1px solid #bbb;
+    border-radius: 50%;
+    }
+
+    .wrapper .form .option input:checked~.checkmark:after {
+    display: block;
+    }
+
+    .wrapper .form .option:hover .checkmark {
+    background: #f3f3f3;
+    }
+
+    .wrapper .form .option .checkmark:after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    display: block;
+    background: blue;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 300ms ease-in-out 0s;
+    }
+
+    .wrapper .form .option input[type="radio"]:checked~.checkmark {
+    background: #fff;
+    transition: 300ms ease-in-out 0s;
+    }
+
+    .wrapper .form .option input[type="radio"]:checked~.checkmark:after {
+    transform: translate(-50%, -50%) scale(1);
+    }
+
+
+    #sub {
+    display: block;
+    width: 100%;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    color: #333;
+    }
+
+    #sub:focus {
+    outline: none;
+    }
+
+{% endblock %}
