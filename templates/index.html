@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'head/head.html' %}
+<body>
+
+{#category_bar#}
+<div class="container">
+    <div class="row mt-1 p-1"
+         style="border-radius: 5px;
+                    position: sticky; top: 0; z-index: 100; background-color: whitesmoke;
+                    display: flex; justify-content: center; align-items: center;"
+    >
+            <a href="{{ url_for('admin') }}">
+            <button
+                    class="btn btn-outline-primary ml-1 mr-1"
+                    type="submit"
+                    style="text-transform: uppercase"
+            >
+                Admin
+            </button>
+
+            <a href="{{ url_for('home') }}?filter_category=all">
+                <button
+                        class="btn btn-outline-primary ml-1 mr-1 {% if filter_category == 'all' %} active {% endif %}"
+                        type="submit"
+                        style="text-transform: uppercase"
+                >
+                    all
+                </button>
+            </a>
+
+            {% for item in category %}
+                <a href="{{ url_for('home') }}?filter_category={{ item.name }}">
+                    <button
+                            class="btn btn-outline-primary ml-1 mr-1 {% if filter_category == item.name %} active {% endif %}"
+                            type="submit"
+                            style="text-transform: uppercase"
+                    >
+                        {{ loop.index }}. {{ item.name }}
+                    </button>
+                </a>
+            {% endfor %}
+    </div>
+
+    {#product#}
+    <div class="row">
+        {% for item in products %}
+            <div class="col-lg-3 col-md-5 col-sm-6 col-xs-12">
+                <div class="card">
+                    <div class="imgBox">
+                        <img src="/static/img/viper.png" class="mouse">
+                    </div>
+                    <div class="contentBox">
+                        <h3>{{ item.name }}</h3>
+                        <h2 style="margin-top: 5px;" class="price">{{ item.price_big }}.<small
+                                style="color:white;">{{ item.price_small }}</small> €</h2>
+                        <a href="/product/{{ item.name }}/{{ item.price_big }}/{{ item.price_small }}/{{ item.category }}/viper.png"
+                           class="details {% if product_details == item.name %} active {% endif %}">Details</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+</body>
+</html>
