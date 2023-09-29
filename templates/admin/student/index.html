@@ -9,7 +9,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Student Lists</h1>
+                    <h1 class="m-0">STUDENT LISTS</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -67,7 +67,7 @@
                                                         <form method="post" action="/admin/detail_student">
                                                             {#<a href="/admin/detail_student_name/{{ item.firstName }}/{{ item.lastName }}">#}
                                                             <input type="hidden" name="sid" value="{{ item.sid }}">
-                                                            <button type="submit">
+                                                            <button type="submit" title="Details">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width=21
                                                                      height=22 fill="none"
                                                                      viewBox="0 0 24 24" stroke="currentColor">
@@ -86,7 +86,7 @@
                                                     <div class="w-5 mr-2.5 transform hover:text-blue-500 hover:scale-110">
                                                         <form method="post" action="/admin/edit_student">
                                                             <input type="hidden" name="sid" value="{{ item.sid }}">
-                                                            <button type="submit">
+                                                            <button type="submit" title="Modify">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width=21
                                                                      height=22 fill="none"
                                                                      viewBox="0 0 24 24" stroke="currentColor">
@@ -103,7 +103,7 @@
                                                                 method="post"
                                                         >
                                                             <input type="hidden" value="{{ item.sid }}" name="sid">
-                                                            <button type="submit">
+                                                            <button type="submit" title="Delete">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width=21
                                                                      height=22 fill="none"
                                                                      viewBox="0 0 26 26"
