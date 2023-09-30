@@ -204,12 +204,35 @@
                         </li>
                         <li class="nav-item">
                             <a href="{{ url_for('students.student') }}"
-                               class="nav-link {% if current_link == 'student' %}active{% endif %}">
+                               class="nav-link {% if current_link == 'students.student' %}active{% endif %}">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
                                     Student
                                 </p>
                             </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-sliders-h"></i>
+                                <p>
+                                    Product
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Product lists</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Category lists</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     {% endwith %}
                 </ul>
