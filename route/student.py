@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect
 import sqlite3 as sql
+from config import execute_query
 
 students = Blueprint('students', __name__)
 
@@ -7,10 +8,6 @@ students = Blueprint('students', __name__)
 # ** filter db and get all data and throw to student list page
 @students.route('/admin/student')
 def student():
-    con = sql.connect("student_ss34.db")
-    con.row_factory = sql.Row
-    cur = con.cursor()
-
     # Get the page number from the query parameters (default to 1 if not present)
     page = request.args.get('page', 1, type=int)
 
@@ -20,12 +17,11 @@ def student():
     # Calculate the offset based on the current page
     offset = (page - 1) * records_per_page
 
-    cur.execute("select * from students LIMIT ? OFFSET ?", (records_per_page, offset))
-    rows = cur.fetchall()
+    # Use the helper function to execute the query
+    rows = execute_query("SELECT * FROM students LIMIT ? OFFSET ?", (records_per_page, offset))
 
     # Calculate the total number of pages
-    cur.execute("SELECT COUNT(*) FROM students")
-    total_records = cur.fetchone()[0]
+    total_records = execute_query("SELECT COUNT(*) FROM students")[0][0]
     total_pages = (total_records // records_per_page) + (total_records % records_per_page > 0)
 
     return render_template('admin/student/index.html', rows=rows, page=page, total_pages=total_pages)
@@ -50,15 +46,14 @@ def student_added():
             phone = request.form['phone']
             subject = request.form['subject']
 
-            with sql.connect("student_ss34.db") as con:
-                cur = con.cursor()
-                cur.execute("INSERT INTO students (firstName,lastName,birthday,gender,email,phoneNumber,subject) VALUES (?,?,?,?,?,?,?)",
-                            (firstname,lastname,birthday,gender,email,phone,subject))
-                con.commit()
-                msg = "Record successfully added"
-                return redirect('/admin/student')
+            # ** using execute_query function from config.py with is_insert=True, so commit will be executed if insert is correct
+            query = "INSERT INTO students (firstName,lastName,birthday,gender,email,phoneNumber,subject) VALUES (?,?,?,?,?,?,?)"
+            params = (firstname, lastname, birthday, gender, email, phone, subject)
+            execute_query(query, params, is_insert=True)
+
+            msg = "Record successfully added"
+            return redirect('/admin/student')
         except:
-            con.rollback()
             msg = "error in insert operation"
 
 
@@ -67,11 +62,11 @@ def student_added():
 def edit_student():
     if request.method == 'POST':
         student_sid = request.form.get("sid", None)
-        con = sql.connect("student_ss34.db")
-        con.row_factory = sql.Row
-        cur = con.cursor()
-        cur.execute(f"select * from students where sid ='{student_sid}'")
-        rows = cur.fetchall()
+
+        # ** student_sid pass as parameter to prevent sql injection
+        query = f"SELECT * FROM students WHERE sid = ?"
+        rows = execute_query(query, (student_sid,))
+
         return render_template('admin/student/edit_student.html', rows=rows)
     else:
         return render_template('admin/student/index.html')
@@ -91,22 +86,23 @@ def student_edited():
             phone = request.form['phone']
             subject = request.form['subject']
 
-            with sql.connect("student_ss34.db") as con:
-                cur = con.cursor()
-                cur.execute(f"update students set "
-                            f"firstName = '{firstname}', "
-                            f"lastName = '{lastname}', "
-                            f"birthday = '{birthday}', "
-                            f"gender = '{gender}', "
-                            f"email = '{email}', "
-                            f"phoneNumber = '{phone}', "
-                            f"subject = '{subject}' "
-                            f"where sid = '{sid}'")
-                con.commit()
-                msg = "Record successfully updated"
-                return redirect('/admin/student')
+            query = f"UPDATE students SET " \
+                    f"firstName = ?, " \
+                    f"lastName = ?, " \
+                    f"birthday = ?, " \
+                    f"gender = ?, " \
+                    f"email = ?, " \
+                    f"phoneNumber = ?, " \
+                    f"subject = ? " \
+                    f"WHERE sid = ?"
+
+            # ** all data pass as parameter to prevent sql injection
+            params = (firstname, lastname, birthday, gender, email, phone, subject, sid)
+            execute_query(query, params, is_insert=True)
+
+            msg = "Record successfully updated"
+            return redirect('/admin/student')
         except:
-            con.rollback()
             msg = "error in insert operation"
 
 
@@ -115,11 +111,11 @@ def student_edited():
 def detail_student():
     if request.method == 'POST':
         student_sid = request.form.get("sid", None)
-        con = sql.connect("student_ss34.db")
-        con.row_factory = sql.Row
-        cur = con.cursor()
-        cur.execute(f"select * from students where sid ='{student_sid}'")
-        rows = cur.fetchall()
+
+        # ** student_sid pass as parameter to prevent sql injection
+        query = f"SELECT * FROM students WHERE sid = ?"
+        rows = execute_query(query, (student_sid,))
+
         return render_template('admin/student/detail_student.html', rows=rows)
     else:
         return render_template('admin/student/index.html')
