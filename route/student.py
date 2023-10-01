@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, current_app
+from werkzeug.utils import secure_filename
+import os
 import sqlite3 as sql
 from config import execute_query
 
@@ -46,15 +48,33 @@ def student_added():
             phone = request.form['phone']
             subject = request.form['subject']
 
-            # ** using execute_query function from config.py with is_insert=True, so commit will be executed if insert is correct
-            query = "INSERT INTO students (firstName,lastName,birthday,gender,email,phoneNumber,subject) VALUES (?,?,?,?,?,?,?)"
-            params = (firstname, lastname, birthday, gender, email, phone, subject)
+            image = request.files.get('image_upload')
+
+            # check if user input image or not
+            if image:
+                # Check the file extension
+                _, extension = os.path.splitext(image.filename)
+                if extension.lower() not in ['.jpg', '.png', '.jfif']:
+                    return 'Invalid file type. Only jpg, png, and jfif files are allowed.', 400
+
+                # Check the file size (2MB = 2 * 1024 * 1024 bytes)
+                if image.content_length > 2 * 1024 * 1024:
+                    return 'File size is too large. The maximum file size is 2MB.', 400
+
+                filename = secure_filename(f"{firstname}_{lastname}{extension}")
+                image.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+
+                query = "INSERT INTO students (firstName,lastName,birthday,gender,email,phoneNumber,subject,image) VALUES (?,?,?,?,?,?,?,?)"
+                params = (firstname, lastname, birthday, gender, email, phone, subject, filename)
+            else:
+                query = "INSERT INTO students (firstName,lastName,birthday,gender,email,phoneNumber,subject) VALUES (?,?,?,?,?,?,?)"
+                params = (firstname, lastname, birthday, gender, email, phone, subject)
+
             execute_query(query, params, is_insert=True)
 
-            msg = "Record successfully added"
             return redirect('/admin/student')
-        except:
-            msg = "error in insert operation"
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
 
 
 # ** get student detail from student page or detail page to filter db and throw to edit page
@@ -127,12 +147,14 @@ def delete_student():
     if request.method == "POST":
         try:
             sid = request.form['sid']
+            page_id = request.form['page_id']
+
             with sql.connect("student_ss34.db") as con:
                 cur = con.cursor()
                 cur.execute(f"DELETE FROM students WHERE sid = '{sid}'")
                 con.commit()
                 msg = "Record successfully deleted"
-                return redirect('/admin/student')
+                return redirect('/admin/student?page=' + page_id)
         except:
             con.rollback()
             msg = "error in insert operation"

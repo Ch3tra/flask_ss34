@@ -4,6 +4,7 @@ import random
 from route.student import students
 
 app = Flask(__name__)
+app.config['UPLOAD_FOLDER'] = 'static/img/student'
 
 # ** create database
 # conn = sql.connect('flask_ss34.db')
