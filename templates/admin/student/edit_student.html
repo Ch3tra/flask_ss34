@@ -13,7 +13,7 @@
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
-        <a href="{{ url_for('students.student') }}">
+        <a href="{{ url_for('students.student', page=page) }}">
             <button type="submit"
                     class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-md px-3.5 py-2 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2">
                 Back to list
@@ -25,7 +25,8 @@
     <div class="container" style="padding: 30px 40px; width: 60%; background-color: white; border-radius: 20px;">
         <div class="h3">Informations</div>
         {% for item in rows %}
-            <form class="form" action="{{ url_for('students.student_edited') }}" method="POST">
+            <form class="form" action="{{ url_for('students.student_edited') }}" method="POST" enctype="multipart/form-data">
+            <input type="hidden" value="{{ page }}" name="page_id">
                 <div class="row">
                     <div class="col-md-6 mt-md-0 mt-3">
                         <input type="hidden" value="{{ item.sid }}" name="sid">
@@ -46,11 +47,13 @@
                         <label>Gender</label>
                         <div class="d-flex align-items-center mt-2">
                             <label class="option" required>
-                                <input type="radio" name="gender" value="Male" {% if item.gender == 'Male' %}checked{% endif %}>Male
+                                <input type="radio" name="gender" value="Male"
+                                       {% if item.gender == 'Male' %}checked{% endif %}>Male
                                 <span class="checkmark"></span>
                             </label>
                             <label class="option ms-4">
-                                <input type="radio" name="gender" value="Female" {% if item.gender == 'Female' %}checked{% endif %}>Female
+                                <input type="radio" name="gender" value="Female"
+                                       {% if item.gender == 'Female' %}checked{% endif %}>Female
                                 <span class="checkmark"></span>
                             </label>
                         </div>
@@ -80,6 +83,22 @@
                         </option>
                     </select>
                 </div>
+                <div class="row">
+                    <div class="col-md-6 mt-md-0 mt-3">
+                        <label>Profile Image</label>
+                        <img src="{{ url_for('static', filename='img/student/' + (item.image if '.' in item.image else item.image + '.jpg')) }}"
+                             alt="Profile Image"
+                             style="width: 150px; height: 150px;"
+                        >
+                    </div>
+                    <div class="col-md-6 mt-md-0 mt-3">
+                        <label>Upload Image</label>
+                        <input type="file" class="form-control" name="image_upload" id="image_upload"
+                               accept=".jpg,.png,.jfif"
+                               onchange="validateSize()"
+                        >
+                    </div>
+                </div>
                 <button style="margin-top: 15px" type="submit"
                         class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 font-medium rounded-lg text-md px-3.5 py-2 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2"
                 >
@@ -88,6 +107,16 @@
             </form>
         {% endfor %}
     </div>
+
+    <script>
+        function validateSize() {
+            const file = document.getElementById('image_upload').files[0];
+            if (file.size > 2 * 1024 * 1024) {
+                alert('File size is too large. The maximum file size is 2MB.');
+                document.getElementById('image_upload').value = '';
+            }
+        }
+    </script>
 
 {% endblock %}
 

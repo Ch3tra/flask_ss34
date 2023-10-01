@@ -40,6 +40,7 @@
                                     <thead>
                                     <tr class="bg-gray-200 text-gray-500 uppercase text-sm leading-normal">
                                         <th class="py-3 px-6 text-left">Name</th>
+                                        <th class="py-3 px-6 text-center">Profile Picture</th>
                                         <th class="py-3 px-6 text-center">Gender</th>
                                         <th class="py-3 px-6 text-center">Email</th>
                                         <th class="py-3 px-6 text-center">Subject</th>
@@ -54,6 +55,12 @@
                                                 <span class="font-medium">{{ item.firstName }} {{ item.lastName }}</span>
                                             </td>
                                             <td class="py-3 px-6 text-center">
+                                                <div class="flex items-center justify-center">
+                                                    <img class="w-8 h-8 rounded-full border-gray-200 border transform hover:scale-125"
+                                                         src="{{ url_for('static', filename='img/student/' + (item.image if '.' in item.image else item.image + '.jpg')) }}"/>
+                                                </div>
+                                            </td>
+                                            <td class="py-3 px-6 text-center">
                                                 <span>{{ item.gender }}</span>
                                             </td>
                                             <td class="py-3 px-6 text-center">
@@ -66,7 +73,7 @@
                                                 <div class="flex item-center justify-center">
                                                     <div class="w-5 mr-2.5 transform hover:text-blue-500 hover:scale-110">
                                                         <form method="post" action="/admin/detail_student">
-                                                            {#<a href="/admin/detail_student_name/{{ item.firstName }}/{{ item.lastName }}">#}
+                                                            <input type="hidden" value="{{ page }}" name="page_id">
                                                             <input type="hidden" name="sid" value="{{ item.sid }}">
                                                             <button type="submit" title="Details">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width=21
@@ -80,13 +87,13 @@
                                                                           d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                                                 </svg>
                                                             </button>
-                                                            {#                                                        </a>#}
                                                         </form>
 
                                                     </div>
                                                     <div class="w-5 mr-2.5 transform hover:text-blue-500 hover:scale-110">
                                                         <form method="post" action="/admin/edit_student">
                                                             <input type="hidden" name="sid" value="{{ item.sid }}">
+                                                            <input type="hidden" value="{{ page }}" name="page_id">
                                                             <button type="submit" title="Modify">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width=21
                                                                      height=22 fill="none"
@@ -105,6 +112,8 @@
                                                         >
                                                             <input type="hidden" value="{{ item.sid }}" name="sid">
                                                             <input type="hidden" value="{{ page }}" name="page_id">
+                                                            <input type="hidden" value="{{ item.image }}"
+                                                                   name="image_upload">
                                                             <button type="submit" title="Delete">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width=21
                                                                      height=22 fill="none"
@@ -136,13 +145,15 @@
                 <a href="{{ url_for('students.student', page=1) }}" class="btn btn-outline-dark">First</a>
                 <a href="{{ url_for('students.student', page=page-1) }}" class="btn btn-outline-dark"><</a>
                 {% if page-2 >= 1 %}
-                    <a href="{{ url_for('students.student', page=page-2) }}" class="btn btn-outline-dark">{{ page-2 }}</a>
+                    <a href="{{ url_for('students.student', page=page-2) }}"
+                       class="btn btn-outline-dark">{{ page-2 }}</a>
                 {% endif %}
             {% endif %}
             <span>---Page {{ page }}---</span>
             {% if page < total_pages %}
                 {% if page+2 <= total_pages %}
-                    <a href="{{ url_for('students.student', page=page+2) }}" class="btn btn-outline-dark">{{ page+2 }}</a>
+                    <a href="{{ url_for('students.student', page=page+2) }}" class="btn btn-outline-dark">
+                        {{ page+2 }}</a>
                 {% endif %}
                 <a href="{{ url_for('students.student', page=page+1) }}" class="btn btn-outline-dark">></a>
                 <a href="{{ url_for('students.student', page=total_pages) }}" class="btn btn-outline-dark">Last</a>

@@ -61,6 +61,7 @@ def student_added():
                 if image.content_length > 2 * 1024 * 1024:
                     return 'File size is too large. The maximum file size is 2MB.', 400
 
+                # Save the image to the uploads folder, with fisrtname_lastname.extension as the filename
                 filename = secure_filename(f"{firstname}_{lastname}{extension}")
                 image.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
 
@@ -82,14 +83,15 @@ def student_added():
 def edit_student():
     if request.method == 'POST':
         student_sid = request.form.get("sid", None)
+        page = request.form['page_id']
 
         # ** student_sid pass as parameter to prevent sql injection
         query = f"SELECT * FROM students WHERE sid = ?"
         rows = execute_query(query, (student_sid,))
 
-        return render_template('admin/student/edit_student.html', rows=rows)
+        return render_template('admin/student/edit_student.html', rows=rows, page=page)
     else:
-        return render_template('admin/student/index.html')
+        return redirect('/admin/student')
 
 
 # ** Student edit or update to db
@@ -98,6 +100,7 @@ def student_edited():
     if request.method == "POST":
         try:
             sid = request.form['sid']
+            page_id = request.form['page_id']
             firstname = request.form['firstname']
             lastname = request.form['lastname']
             birthday = request.form['birthday']
@@ -106,24 +109,61 @@ def student_edited():
             phone = request.form['phone']
             subject = request.form['subject']
 
-            query = f"UPDATE students SET " \
-                    f"firstName = ?, " \
-                    f"lastName = ?, " \
-                    f"birthday = ?, " \
-                    f"gender = ?, " \
-                    f"email = ?, " \
-                    f"phoneNumber = ?, " \
-                    f"subject = ? " \
-                    f"WHERE sid = ?"
+            image = request.files.get('image_upload')
 
-            # ** all data pass as parameter to prevent sql injection
-            params = (firstname, lastname, birthday, gender, email, phone, subject, sid)
+            # check if user input image or not
+            if image:
+                # Check the file extension
+                _, extension = os.path.splitext(image.filename)
+                if extension.lower() not in ['.jpg', '.png', '.jfif']:
+                    return 'Invalid file type. Only jpg, png, and jfif files are allowed.', 400
+
+                # Check the file size (2MB = 2 * 1024 * 1024 bytes)
+                if image.content_length > 2 * 1024 * 1024:
+                    return 'File size is too large. The maximum file size is 2MB.', 400
+
+                # Get the old image filename from the database
+                old_image_query = "SELECT image FROM students WHERE sid = ?"
+                old_image_filename = execute_query(old_image_query, (sid,), is_insert=False)[0]['image']
+
+                # Delete the old image file
+                if old_image_filename:
+                    old_image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], old_image_filename)
+                    if os.path.isfile(old_image_path):
+                        os.remove(old_image_path)
+
+                # Save the image to the uploads folder, with fisrtname_lastname.extension as the filename
+                filename = secure_filename(f"{firstname}_{lastname}{extension}")
+                image.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
+
+                query = f"UPDATE students SET " \
+                        f"firstName = ?, " \
+                        f"lastName = ?, " \
+                        f"birthday = ?, " \
+                        f"gender = ?, " \
+                        f"email = ?, " \
+                        f"phoneNumber = ?, " \
+                        f"subject = ?, " \
+                        f"image = ? " \
+                        f"WHERE sid = ?"
+                params = (firstname, lastname, birthday, gender, email, phone, subject, filename, sid)
+            else:
+                query = f"UPDATE students SET " \
+                        f"firstName = ?, " \
+                        f"lastName = ?, " \
+                        f"birthday = ?, " \
+                        f"gender = ?, " \
+                        f"email = ?, " \
+                        f"phoneNumber = ?, " \
+                        f"subject = ? " \
+                        f"WHERE sid = ?"
+                params = (firstname, lastname, birthday, gender, email, phone, subject, sid)
+
             execute_query(query, params, is_insert=True)
 
-            msg = "Record successfully updated"
-            return redirect('/admin/student')
-        except:
-            msg = "error in insert operation"
+            return redirect('/admin/student?page=' + page_id)
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
 
 
 # ** get student details from student page to filter db and throw to detail page
@@ -131,14 +171,15 @@ def student_edited():
 def detail_student():
     if request.method == 'POST':
         student_sid = request.form.get("sid", None)
+        page = request.form['page_id']
 
         # ** student_sid pass as parameter to prevent sql injection
         query = f"SELECT * FROM students WHERE sid = ?"
         rows = execute_query(query, (student_sid,))
 
-        return render_template('admin/student/detail_student.html', rows=rows)
+        return render_template('admin/student/detail_student.html', rows=rows, page=page)
     else:
-        return render_template('admin/student/index.html')
+        return redirect('/admin/student')
 
 
 # ** Student delete on db
@@ -148,13 +189,17 @@ def delete_student():
         try:
             sid = request.form['sid']
             page_id = request.form['page_id']
+            image = request.form['image_upload']
 
-            with sql.connect("student_ss34.db") as con:
-                cur = con.cursor()
-                cur.execute(f"DELETE FROM students WHERE sid = '{sid}'")
-                con.commit()
-                msg = "Record successfully deleted"
-                return redirect('/admin/student?page=' + page_id)
-        except:
-            con.rollback()
-            msg = "error in insert operation"
+            # Delete the old image file if it's not the default image
+            if image != 'default_img':
+                image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], image)
+                if os.path.isfile(image_path):
+                    os.remove(image_path)
+
+            query = f"DELETE FROM students WHERE sid = ?"
+            execute_query(query, (sid,), is_insert=True)
+
+            return redirect('/admin/student?page=' + page_id)
+        except Exception as e:
+            return f"An error occurred: {str(e)}"
