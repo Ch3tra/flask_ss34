@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request
 import randomname
 import random
+
+from route.product import products
 from route.student import students
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'static/img/student'
+app.config['UPLOAD_FOLDER_STUDENT'] = 'static/img/student'
+app.config['UPLOAD_FOLDER_PRODUCT'] = 'static/img/product'
 
 # ** create database
 # conn = sql.connect('flask_ss34.db')
@@ -89,6 +92,7 @@ def admin():
 
 
 app.register_blueprint(students)
+app.register_blueprint(products)
 
 
 if __name__ == '__main__':
