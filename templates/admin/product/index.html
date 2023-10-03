@@ -41,7 +41,7 @@
                                     <thead>
                                     <tr class="bg-gray-200 text-gray-500 uppercase text-sm leading-normal">
                                         <th class="py-3 px-6 text-left">Name</th>
-                                        <th class="py-3 px-6 text-center">Profile Picture</th>
+                                        <th class="py-3 px-6 text-center">Picture</th>
                                         <th class="py-3 px-6 text-center">Category</th>
                                         <th class="py-3 px-6 text-center">Description</th>
                                         <th class="py-3 px-6 text-center">Cost ($)</th>
@@ -57,7 +57,7 @@
                                             </td>
                                             <td class="py-3 px-6 text-center">
                                                 <div class="flex items-center justify-center">
-                                                    <img class="w-8 h-8 rounded-full border-gray-200 border transform hover:scale-125"
+                                                    <img class="w-8 h-8 rounded-full border-gray-200 border transform hover:scale-150"
                                                          src="{{ url_for('static', filename='img/product/' + (item.image if '.' in item.image else item.image + '.jpg')) }}"/>
                                                 </div>
                                             </td>
