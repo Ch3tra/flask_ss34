@@ -1,0 +1,130 @@
+{% extends 'admin/layout_admin.html' %}
+{% block title %}
+    Category
+{% endblock %}
+
+{% block main_content %}
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div style="display: flex;" class="col-sm-6">
+                    <svg style="margin-right: 10px" xmlns="http://www.w3.org/2000/svg" width="23px" viewBox="0 0 512 512">
+                        <path d="M12.41 148.02l232.94 105.67c6.8 3.09 14.49 3.09 21.29 0l232.94-105.67c16.55-7.51 16.55-32.52 0-40.03L266.65 2.31a25.607 25.607 0 0 0-21.29 0L12.41 107.98c-16.55 7.51-16.55 32.53 0 40.04zm487.18 88.28l-58.09-26.33-161.64 73.27c-7.56 3.43-15.59 5.17-23.86 5.17s-16.29-1.74-23.86-5.17L70.51 209.97l-58.1 26.33c-16.55 7.5-16.55 32.5 0 40l232.94 105.59c6.8 3.08 14.49 3.08 21.29 0L499.59 276.3c16.55-7.5 16.55-32.5 0-40zm0 127.8l-57.87-26.23-161.86 73.37c-7.56 3.43-15.59 5.17-23.86 5.17s-16.29-1.74-23.86-5.17L70.29 337.87 12.41 364.1c-16.55 7.5-16.55 32.5 0 40l232.94 105.59c6.8 3.08 14.49 3.08 21.29 0L499.59 404.1c16.55-7.5 16.55-32.5 0-40z"/></svg>
+                    <h1 class="m-0">CATEGORY LISTS</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        <a href="{{ url_for('categories.add_category') }}">
+            <button type="submit"
+                    class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-md px-3.5 py-2 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 10px" width="18" height="18"
+                     fill="currentColor" class="bi bi-plus-circle"
+                     viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+                Add New Category
+            </button>
+        </a>
+    </div>
+
+    <!-- Main content -->
+    <div class="content" style="padding-right: 30px">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12 lg-12">
+                    <div class="overflow-x-auto">
+                        <div class="bg-gray-100 flex items-center justify-center bg-gray-100 font-sans overflow-hidden">
+                            <div class="w-full lg:w-6/6">
+                                <table class="min-w-max w-full table-auto">
+                                    <thead>
+                                    <tr class="bg-gray-200 text-gray-500 uppercase text-sm leading-normal">
+                                        <th class="py-3 px-6 text-left">Name</th>
+                                        <th class="py-3 px-6 text-center">Description</th>
+                                        <th class="py-3 px-6 text-center">Actions</th>
+                                    </tr>
+                                    </thead>
+
+                                    {% for item in rows %}
+                                        <tbody class="text-gray-600 text-sm font-light">
+                                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                                            <td class="py-3 px-6 text-left whitespace-nowrap">
+                                                <span class="font-medium">{{ item.categoryName }}</span>
+                                            </td>
+                                            <td class="py-3 px-6 text-center">
+                                                <span>{{ item.categoryDesc }}</span>
+                                            </td>
+                                            <td class="py-3 px-6 text-center">
+                                                <div class="flex item-center justify-center">
+                                                    <div class="w-5 mr-2.5 transform hover:text-blue-500 hover:scale-110">
+                                                        <form method="post" action="/admin/edit_category">
+                                                            <input type="hidden" value="{{ item.categoryId }}" name="cid">
+                                                            <input type="hidden" value="{{ page }}" name="page_id">
+                                                            <button type="submit" title="Modify">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width=21
+                                                                     height=22 fill="none"
+                                                                     viewBox="0 0 24 24" stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                          stroke-width="2"
+                                                                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                                                                </svg>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                    <div class="w-5 mr-2.5 transform hover:text-red-500 hover:scale-110">
+                                                        <form
+                                                                action="{{ url_for('categories.delete_category') }}"
+                                                                method="post"
+                                                        >
+                                                            <input type="hidden" value="{{ item.categoryId }}" name="cid">
+                                                            <input type="hidden" value="{{ page }}" name="page_id">
+                                                            <button type="submit" title="Delete">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width=21
+                                                                     height=22 fill="none"
+                                                                     viewBox="0 0 26 26"
+                                                                     stroke="currentColor">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                          stroke-width="2"
+                                                                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                                </svg>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    {% endfor %}
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pagination Links -->
+        <div style="margin-top: 20px" class="text-center">
+            {% if page > 1 %}
+                <a href="{{ url_for('products.product', page=1) }}" class="btn btn-outline-dark">First</a>
+                <a href="{{ url_for('products.product', page=page-1) }}" class="btn btn-outline-dark"><</a>
+                {% if page-2 >= 1 %}
+                    <a href="{{ url_for('products.product', page=page-2) }}"
+                       class="btn btn-outline-dark">{{ page-2 }}</a>
+                {% endif %}
+            {% endif %}
+            <span>---Page {{ page }}---</span>
+            {% if page < total_pages %}
+                {% if page+2 <= total_pages %}
+                    <a href="{{ url_for('products.product', page=page+2) }}" class="btn btn-outline-dark">
+                        {{ page+2 }}</a>
+                {% endif %}
+                <a href="{{ url_for('products.product', page=page+1) }}" class="btn btn-outline-dark">></a>
+                <a href="{{ url_for('products.product', page=total_pages) }}" class="btn btn-outline-dark">Last</a>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
+

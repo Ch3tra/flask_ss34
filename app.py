@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 import randomname
 import random
 
+from route.category import categories
 from route.product import products
 from route.student import students
 
@@ -93,6 +94,7 @@ def admin():
 
 app.register_blueprint(students)
 app.register_blueprint(products)
+app.register_blueprint(categories)
 
 
 if __name__ == '__main__':

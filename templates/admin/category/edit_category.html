@@ -1,0 +1,139 @@
+{% extends 'admin/layout_admin.html' %}
+{% block title %}
+    Category Modify
+{% endblock %}
+
+{% block main_content %}
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0">CATEGORY MODIFY</h1>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
+        <a href="{{ url_for('categories.category', page=page) }}">
+            <button type="submit"
+                    class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-md px-3.5 py-2 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2">
+                Back to list
+            </button>
+        </a>
+    </div>
+
+
+    <div class="container" style="padding: 30px 40px; width: 60%; background-color: white; border-radius: 20px;">
+        <div class="h3">Informations</div>
+        {% for item in rows %}
+            <form class="form" action="{{ url_for('categories.category_edited') }}" method="POST"
+                  enctype="multipart/form-data">
+                <input type="hidden" value="{{ page }}" name="page_id">
+                <div class="row">
+                    <div class="col-md-6 mt-md-0 mt-3">
+                        <input type="hidden" value="{{ item.categoryId }}" name="cid">
+                        <label>Name</label>
+                        <input type="text" class="form-control" value="{{ item.categoryName }}" required name="name">
+                    </div>
+                    <div class="col-md-6 mt-md-0 mt-3">
+                        <label>Description</label>
+                        <input type="text" class="form-control" value="{{ item.categoryDesc }}" required
+                               name="description">
+                    </div>
+                </div>
+                <button style="margin-top: 15px" type="submit"
+                        class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 font-medium rounded-lg text-md px-3.5 py-2 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2"
+                >
+                    SAVE
+                </button>
+            </form>
+        {% endfor %}
+    </div>
+
+
+{% endblock %}
+
+
+{% block style %}
+    .wrapper label {
+    display: block;
+    padding-bottom: 0.2rem;
+    }
+
+    .wrapper .form .row {
+    padding: 0.6rem 0;
+    }
+
+    .wrapper .form .row .form-control {
+    box-shadow: none;
+    }
+
+    .wrapper .form .option {
+    position: relative;
+    padding-left: 20px;
+    cursor: pointer;
+    }
+
+    .wrapper .form .option input {
+    opacity: 0;
+    }
+
+    .wrapper .option{
+    top: 7px;
+    }
+
+    .wrapper .form .checkmark {
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    height: 20px;
+    width: 20px;
+    border: 1px solid #bbb;
+    border-radius: 50%;
+    }
+
+    .wrapper .form .option input:checked~.checkmark:after {
+    display: block;
+    }
+
+    .wrapper .form .option:hover .checkmark {
+    background: #f3f3f3;
+    }
+
+    .wrapper .form .option .checkmark:after {
+    content: "";
+    width: 10px;
+    height: 10px;
+    display: block;
+    background: blue;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 300ms ease-in-out 0s;
+    }
+
+    .wrapper .form .option input[type="radio"]:checked~.checkmark {
+    background: #fff;
+    transition: 300ms ease-in-out 0s;
+    }
+
+    .wrapper .form .option input[type="radio"]:checked~.checkmark:after {
+    transform: translate(-50%, -50%) scale(1);
+    }
+
+
+    #sub {
+    display: block;
+    width: 100%;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    color: #333;
+    }
+
+    #sub:focus {
+    outline: none;
+    }
+
+{% endblock %}
