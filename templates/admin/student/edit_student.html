@@ -85,14 +85,14 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 mt-md-0 mt-3">
-                        <label>Profile Image</label>
+                        <label>Profile Picture</label>
                         <img src="{{ url_for('static', filename='img/student/' + (item.image if '.' in item.image else item.image + '.jpg')) }}"
                              alt="Profile Image"
-                             style="width: 150px; height: 150px;"
+                             style="width: 200px; height: 160px;"
                         >
                     </div>
                     <div class="col-md-6 mt-md-0 mt-3">
-                        <label>Upload New Image</label>
+                        <label>Upload New Picture</label>
                         <input type="file" class="form-control" name="image_upload" id="image_upload"
                                accept=".jpg,.png,.jfif"
                                onchange="validateSize()"
