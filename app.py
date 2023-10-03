@@ -11,10 +11,6 @@ app.config['UPLOAD_FOLDER_STUDENT'] = 'static/img/student'
 app.config['UPLOAD_FOLDER_PRODUCT'] = 'static/img/product'
 
 # ** create database
-# conn = sql.connect('flask_ss34.db')
-# conn.execute('CREATE TABLE students (name TEXT, gender TEXT, email TEXT, address TEXT)')
-# conn.close()
-
 # conn = sql.connect('student_ss34.db')
 # conn.execute('''
 # CREATE TABLE students (
@@ -30,6 +26,9 @@ app.config['UPLOAD_FOLDER_PRODUCT'] = 'static/img/product'
 # ''')
 # conn.close()
 
+app.register_blueprint(students)
+app.register_blueprint(products)
+app.register_blueprint(categories)
 
 @app.route('/')
 @app.route('/home')
@@ -92,9 +91,7 @@ def admin():
     return render_template('admin/index.html')
 
 
-app.register_blueprint(students)
-app.register_blueprint(products)
-app.register_blueprint(categories)
+
 
 
 if __name__ == '__main__':

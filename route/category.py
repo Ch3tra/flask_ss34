@@ -35,7 +35,7 @@ def add_category():
     return render_template('admin/category/add_category.html')
 
 
-# ** student added to db
+# ** category added to db
 @categories.route('/admin/category_added', methods=['POST'])
 def category_added():
     if request.method == "POST":
@@ -53,7 +53,7 @@ def category_added():
             return f"An error occurred: {str(e)}"
 
 
-# ** get student detail from student page or detail page to filter db and throw to edit page
+# ** get category detail from student page or detail page to filter db and throw to edit page
 @categories.route('/admin/edit_category', methods=['GET', 'POST'])
 def edit_category():
     if request.method == 'POST':
@@ -69,7 +69,7 @@ def edit_category():
         return redirect('/admin/category')
 
 
-# ** Student edit or update to db
+# ** category edit or update to db
 @categories.route('/admin/category_edited', methods=['POST'])
 def category_edited():
     if request.method == "POST":
@@ -92,7 +92,7 @@ def category_edited():
             return f"An error occurred: {str(e)}"
 
 
-# ** Student delete on db
+# ** category delete on db
 @categories.route('/admin/delete_category', methods=['POST'])
 def delete_category():
     if request.method == "POST":
