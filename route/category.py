@@ -60,7 +60,7 @@ def edit_category():
         cid = request.form.get("cid", None)
         page = request.form['page_id']
 
-        # ** student_sid pass as parameter to prevent sql injection
+        # ** cid pass as parameter to prevent sql injection
         query = f"SELECT * FROM categories WHERE categoryId = ?"
         rows = execute_query(query, (cid,))
 
