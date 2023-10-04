@@ -1,1 +1,2 @@
-just a school project pratice using flask...
+# pip install all dependency from text file 
+pip install -r requirements.txt
