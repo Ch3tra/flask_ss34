@@ -85,8 +85,28 @@
                     <label>Profile Picture</label>
                     <img src="{{ url_for('static', filename='img/student/' + (item.image if '.' in item.image else item.image + '.jpg')) }}"
                          alt="Profile Image"
-                         style="width: 200px; height: 160px;"
+                         style="width: 200px; height: 180px; border-radius: 15px; box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); transition: all 0.3s ease-in-out; cursor: pointer;"
+                         onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 20px 30px rgba(0, 0, 0, 0.2)';"
+                         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 10px 15px rgba(0, 0, 0, 0.1)';"
+                         data-toggle="modal" data-target="#myModal"
                     >
+                    <!-- The Modal -->
+                    <div class="modal fade" id="myModal">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    <img src="{{ url_for('static', filename='img/student/' + (item.image if '.' in item.image else item.image + '.jpg')) }}"
+                                         alt="Profile Image"
+                                         style="width: 100%;">
+                                </div>
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <button style="margin-top: 15px" type="submit"
