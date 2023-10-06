@@ -32,8 +32,9 @@
                     <div class="col-md-6 mt-md-0 mt-3">
                         <input type="hidden" value="{{ item.productId }}" name="pid">
                         <label>Name</label>
-                        <input type="text" class="form-control" value="{{ item.productName }}" required name="name"
-                               maxlength="60">
+                        <input type="text" class="form-control" value="{{ item.productName }}" required
+                               pattern="[a-zA-Z\u1780-\u17FF]+"
+                               name="name" maxlength="60">
                     </div>
                     <div class="col-md-6 mt-md-0 mt-3">
                         <label>Cost ($)</label>
@@ -45,6 +46,7 @@
                     <div class="col-md-12 mt-md-0 mt-3">
                         <label>Description</label>
                         <textarea class="form-control" rows="4" style="resize: none;" required
+                                  pattern="[a-zA-Z\u1780-\u17FF]+"
                                   name="description">{{ item.productDesc }}</textarea>
                     </div>
                 </div>

@@ -32,13 +32,15 @@
                     <div class="col-md-6 mt-md-0 mt-3">
                         <input type="hidden" value="{{ item.sid }}" name="sid">
                         <label>First Name</label>
-                        <input type="text" class="form-control" value="{{ item.firstName }}" required name="firstname"
-                               pattern="[a-zA-Z]+" maxlength="10">
+                        <input type="text" class="form-control" value="{{ item.firstName }}"
+                               required name="firstname"
+                               pattern="[a-zA-Z\u1780-\u17FF]+" maxlength="10">
                     </div>
                     <div class="col-md-6 mt-md-0 mt-3">
                         <label>Last Name</label>
-                        <input type="text" class="form-control" value="{{ item.lastName }}" required name="lastname"
-                               pattern="[a-zA-Z]+" maxlength="20">
+                        <input type="text" class="form-control" value="{{ item.lastName }}" required
+                               name="lastname"
+                               pattern="[a-zA-Z\u1780-\u17FF]+" maxlength="20">
                     </div>
                 </div>
                 <div class="row">

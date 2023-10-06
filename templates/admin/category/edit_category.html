@@ -32,14 +32,17 @@
                     <div class="col-md-6 mt-md-0 mt-3">
                         <input type="hidden" value="{{ item.categoryId }}" name="cid">
                         <label>Name</label>
-                        <input type="text" class="form-control" value="{{ item.categoryName }}" required name="name"
-                               maxlength="25">
+                        <input type="text" class="form-control" value="{{ item.categoryName }}" required
+                               pattern="[a-zA-Z\u1780-\u17FF]+"
+                               name="name" maxlength="25">
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 mt-md-0 mt-3">
                         <label>Description</label>
-                        <textarea class="form-control" rows="4" style="resize: none;" required name="description">{{ item.categoryDesc }}</textarea>
+                        <textarea class="form-control" rows="4" style="resize: none;" required
+                                  pattern="[a-zA-Z\u1780-\u17FF]+"
+                                  name="description">{{ item.categoryDesc }}</textarea>
                     </div>
                 </div>
                 <button style="margin-top: 15px" type="submit"
