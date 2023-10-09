@@ -53,7 +53,7 @@ def category_added():
             return f"An error occurred: {str(e)}"
 
 
-# ** get category detail from student page or detail page to filter db and throw to edit page
+# ** get category detail from category page filter db and throw to edit page
 @categories.route('/admin/edit_category', methods=['GET', 'POST'])
 def edit_category():
     if request.method == 'POST':
