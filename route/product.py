@@ -21,7 +21,7 @@ def product():
 
     # use inner to get category name from categories table according to category id in products table
     rows = execute_query(
-        "SELECT products.*, categories.categoryName AS category_name FROM products INNER JOIN categories ON products.categoryId = categories.categoryId LIMIT ? OFFSET ?",
+        "SELECT products.*, categories.categoryName AS category_name FROM products LEFT JOIN categories ON products.categoryId = categories.categoryId LIMIT ? OFFSET ?",
         (records_per_page, offset))
 
     # Calculate the total number of pages
@@ -92,7 +92,7 @@ def edit_product():
         all_categories = execute_query("SELECT * FROM categories")
 
         # ** student_sid pass as parameter to prevent sql injection
-        query = f"SELECT products.*, categories.categoryName AS category_name FROM products INNER JOIN categories ON products.categoryId = categories.categoryId WHERE products.productId = ?"
+        query = f"SELECT products.*, categories.categoryName AS category_name FROM products LEFT JOIN categories ON products.categoryId = categories.categoryId WHERE products.productId = ?"
         rows = execute_query(query, (pid,))
 
         return render_template('admin/product/edit_product.html', rows=rows, page=page, categories=all_categories)
@@ -171,7 +171,7 @@ def detail_product():
         page = request.form['page_id']
 
         # ** student_sid pass as parameter to prevent sql injection
-        query = f"SELECT products.*, categories.categoryName AS category_name FROM products INNER JOIN categories ON products.categoryId = categories.categoryId WHERE products.productId = ?"
+        query = f"SELECT products.*, categories.categoryName AS category_name FROM products LEFT JOIN categories ON products.categoryId = categories.categoryId WHERE products.productId = ?"
         rows = execute_query(query, (pid,))
 
         return render_template('admin/product/detail_product.html', rows=rows, page=page)
