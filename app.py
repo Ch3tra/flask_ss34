@@ -30,6 +30,7 @@ app.register_blueprint(students)
 app.register_blueprint(products)
 app.register_blueprint(categories)
 
+
 @app.route('/')
 @app.route('/home')
 def home():
@@ -89,9 +90,6 @@ def product(name, price_big, price_small, category, image):
 @app.route('/admin')
 def admin():
     return render_template('admin/index.html')
-
-
-
 
 
 if __name__ == '__main__':
