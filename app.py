@@ -86,6 +86,19 @@ def product(name, price_big, price_small, category, image):
     return render_template('product_details.html', name=name, category=category, price_big=price_big, price_small=price_small, image=image)
 
 
+# ** handling 404
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('error/404.html'), 404
+
+
+# ** handling 500
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('error/500.html'), 500
+
+
 # ** admin page or dashboard
 @app.route('/admin')
 def admin():
