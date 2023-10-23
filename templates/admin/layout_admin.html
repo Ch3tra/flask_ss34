@@ -225,8 +225,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#"
-                               class="nav-link">
+                            <a href="{{ url_for('users.user') }}"
+                               class="nav-link                                {% if
+                                current_link == 'users.add_user' or
+                                current_link == 'users.detail_user' or
+                                current_link == 'users.edit_user' or
+                                current_link == 'users.user' %}active{% endif %}">
                                 <i class="nav-icon fas fa-user"></i>
                                 <p>
                                     User

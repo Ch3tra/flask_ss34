@@ -1,6 +1,6 @@
 {% extends 'admin/layout_admin.html' %}
 {% block title %}
-    Customer
+    User
 {% endblock %}
 
 {% block main_content %}
@@ -10,11 +10,11 @@
             <div class="row mb-2">
                 <div style="display: flex;" class="col-sm-6">
                     <i style="font-size: 20px; margin-top: 7px; margin-right: 10px" class="nav-icon fas fa-user"></i>
-                    <h1 class="m-0">CUSTOMER LISTS</h1>
+                    <h1 class="m-0">USER LISTS</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
-        <a href="{{ url_for('customers.add_customer') }}">
+        <a href="{{ url_for('users.add_user') }}">
             <button type="submit"
                     class="text-white bg-[#2557D6] hover:bg-[#2557D6]/90 focus:ring-4 focus:ring-[#2557D6]/50 focus:outline-none font-medium rounded-lg text-md px-3.5 py-2 text-center inline-flex items-center dark:focus:ring-[#2557D6]/50 mr-2 mb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 10px" width="18" height="18"
@@ -50,12 +50,12 @@
                                         <tbody class="text-gray-600 text-sm font-light">
                                         <tr class="border-b border-gray-200 hover:bg-gray-100">
                                             <td class="py-3 px-6 text-left whitespace-nowrap">
-                                                <span class="font-medium">{{ item.customerName }}</span>
+                                                <span class="font-medium">{{ item.userName }}</span>
                                             </td>
                                             <td class="py-3 px-6 text-center">
                                                 <div class="flex items-center justify-center">
                                                     <img class="w-8 h-8 rounded-full border-gray-200 border transform hover:scale-150"
-                                                         src="{{ url_for('static', filename='img/customer/' + (item.image if '.' in item.image else item.image + '.jpg')) }}"/>
+                                                         src="{{ url_for('static', filename='img/user/' + (item.image if '.' in item.image else item.image + '.jpg')) }}"/>
                                                 </div>
                                             </td>
                                             <td class="py-3 px-6 text-center">
@@ -64,9 +64,9 @@
                                             <td class="py-3 px-6 text-center">
                                                 <div class="flex item-center justify-center">
                                                     <div class="w-5 mr-2.5 transform hover:text-blue-500 hover:scale-110">
-                                                        <form method="post" action="/admin/edit_customer">
-                                                            <input type="hidden" value="{{ item.customerId }}"
-                                                                   name="cid">
+                                                        <form method="post" action="/admin/edit_user">
+                                                            <input type="hidden" value="{{ item.userId }}"
+                                                                   name="uid">
                                                             <input type="hidden" value="{{ page }}" name="page_id">
                                                             <button type="submit" title="Modify">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width=21
@@ -81,11 +81,11 @@
                                                     </div>
                                                     <div class="w-5 mr-2.5 transform hover:text-red-500 hover:scale-110">
                                                         <form
-                                                                action="{{ url_for('customers.delete_customer') }}"
+                                                                action="{{ url_for('users.delete_user') }}"
                                                                 method="post"
                                                         >
-                                                            <input type="hidden" value="{{ item.customerId }}"
-                                                                   name="cid">
+                                                            <input type="hidden" value="{{ item.userId }}"
+                                                                   name="uid">
                                                             <input type="hidden" value="{{ item.image }}"
                                                                    name="image_upload">
                                                             <input type="hidden" value="{{ page }}" name="page_id">
