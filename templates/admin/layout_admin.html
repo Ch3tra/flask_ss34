@@ -212,6 +212,37 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ url_for('customers.customer') }}"
+                               class="nav-link                                {% if
+                                current_link == 'customers.add_customer' or
+                                current_link == 'customers.detail_customer' or
+                                current_link == 'customers.edit_customer' or
+                                current_link == 'customers.customer' %}active{% endif %}">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>
+                                    Customer
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#"
+                               class="nav-link">
+                                <i class="nav-icon fas fa-user"></i>
+                                <p>
+                                    User
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#"
+                               class="nav-link">
+                                <i class="nav-icon fas fa-money-check"></i>
+                                <p>
+                                    Currency
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-sliders-h"></i>
                                 <p>
