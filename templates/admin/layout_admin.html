@@ -238,8 +238,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#"
-                               class="nav-link">
+                            <a href="{{ url_for('currencies.currency') }}"
+                               class="nav-link                                {% if
+                                current_link == 'currencies.add_currency' or
+                                current_link == 'currencies.detail_currency' or
+                                current_link == 'currencies.edit_currency' or
+                                current_link == 'currencies.currency' %}active{% endif %}">
                                 <i class="nav-icon fas fa-money-check"></i>
                                 <p>
                                     Currency

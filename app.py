@@ -7,12 +7,21 @@ from route.product import products
 from route.student import students
 from route.customer import customers
 from route.user import users
+from route.currency import currencies
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER_STUDENT'] = 'static/img/student'
 app.config['UPLOAD_FOLDER_PRODUCT'] = 'static/img/product'
 app.config['UPLOAD_FOLDER_CUSTOMER'] = 'static/img/customer'
 app.config['UPLOAD_FOLDER_USER'] = 'static/img/user'
+
+app.register_blueprint(students)
+app.register_blueprint(products)
+app.register_blueprint(categories)
+app.register_blueprint(customers)
+app.register_blueprint(users)
+app.register_blueprint(currencies)
+
 
 # ** create database
 # conn = sql.connect('student_ss34.db')
@@ -30,11 +39,7 @@ app.config['UPLOAD_FOLDER_USER'] = 'static/img/user'
 # ''')
 # conn.close()
 
-app.register_blueprint(students)
-app.register_blueprint(products)
-app.register_blueprint(categories)
-app.register_blueprint(customers)
-app.register_blueprint(users)
+
 
 
 @app.route('/')
