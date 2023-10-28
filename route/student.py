@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, current_app
+from flask_login import login_required
 from werkzeug.utils import secure_filename
 import os
 import sqlite3 as sql
@@ -9,6 +10,7 @@ students = Blueprint('students', __name__)
 
 # ** filter db and get all data and throw to student list page
 @students.route('/admin/student')
+@login_required
 def student():
     # Get the page number from the query parameters (default to 1 if not present)
     page = request.args.get('page', 1, type=int)
@@ -31,12 +33,14 @@ def student():
 
 # ** load to add student page
 @students.route('/admin/add_student')
+@login_required
 def add_student():
     return render_template('admin/student/add_student.html')
 
 
 # ** student added to db
 @students.route('/admin/student_added', methods=['POST'])
+@login_required
 def student_added():
     if request.method == "POST":
         try:
@@ -80,6 +84,7 @@ def student_added():
 
 # ** get student detail from student page or detail page to filter db and throw to edit page
 @students.route('/admin/edit_student', methods=['GET', 'POST'])
+@login_required
 def edit_student():
     if request.method == 'POST':
         student_sid = request.form.get("sid", None)
@@ -96,6 +101,7 @@ def edit_student():
 
 # ** Student edit or update to db
 @students.route('/admin/student_edited', methods=['POST'])
+@login_required
 def student_edited():
     if request.method == "POST":
         try:
@@ -168,6 +174,7 @@ def student_edited():
 
 # ** get student details from student page to filter db and throw to detail page
 @students.route('/admin/detail_student', methods=['GET', 'POST'])
+@login_required
 def detail_student():
     if request.method == 'POST':
         student_sid = request.form.get("sid", None)
@@ -184,6 +191,7 @@ def detail_student():
 
 # ** Student delete on db
 @students.route('/admin/delete_student', methods=['POST'])
+@login_required
 def delete_student():
     if request.method == "POST":
         try:

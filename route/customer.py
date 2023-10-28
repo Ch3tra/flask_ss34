@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, current_app
+from flask_login import login_required
 from werkzeug.utils import secure_filename
 import os
 import sqlite3 as sql
@@ -9,6 +10,7 @@ customers = Blueprint('customers', __name__)
 
 # ** filter db and get all data and throw to customer list page
 @customers.route('/admin/customer')
+@login_required
 def customer():
     # Get the page number from the query parameters (default to 1 if not present)
     page = request.args.get('page', 1, type=int)
@@ -31,12 +33,14 @@ def customer():
 
 # ** load to add customer page
 @customers.route('/admin/add_customer')
+@login_required
 def add_customer():
     return render_template('admin/customer/add_customer.html')
 
 
 # ** customer added to db
 @customers.route('/admin/customer_added', methods=['POST'])
+@login_required
 def customer_added():
     if request.method == "POST":
         try:
@@ -75,6 +79,7 @@ def customer_added():
 
 # ** get customer detail from customer page filter db and throw to edit page
 @customers.route('/admin/edit_customer', methods=['GET', 'POST'])
+@login_required
 def edit_customer():
     if request.method == 'POST':
         cid = request.form.get("cid", None)
@@ -91,6 +96,7 @@ def edit_customer():
 
 # ** customer edit or update to db
 @customers.route('/admin/customer_edited', methods=['POST'])
+@login_required
 def customer_edited():
     if request.method == "POST":
         try:
@@ -148,6 +154,7 @@ def customer_edited():
 
 # ** customer delete on db
 @customers.route('/admin/delete_customer', methods=['POST'])
+@login_required
 def delete_customer():
     if request.method == "POST":
         try:

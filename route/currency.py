@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, current_app
+from flask_login import login_required
 from werkzeug.utils import secure_filename
 import os
 import sqlite3 as sql
@@ -9,6 +10,7 @@ currencies = Blueprint('currencies', __name__)
 
 # ** filter db and get all data and throw to currency list page
 @currencies.route('/admin/currency')
+@login_required
 def currency():
     # Get the page number from the query parameters (default to 1 if not present)
     page = request.args.get('page', 1, type=int)
@@ -31,12 +33,14 @@ def currency():
 
 # ** load to add currency page
 @currencies.route('/admin/add_currency')
+@login_required
 def add_currency():
     return render_template('admin/currency/add_currency.html')
 
 
 # ** currency added to db
 @currencies.route('/admin/currency_added', methods=['POST'])
+@login_required
 def currency_added():
     if request.method == "POST":
         try:
@@ -57,6 +61,7 @@ def currency_added():
 
 # ** get currency detail from currency page filter db and throw to edit page
 @currencies.route('/admin/edit_currency', methods=['GET', 'POST'])
+@login_required
 def edit_currency():
     if request.method == 'POST':
         cid = request.form.get("cid", None)
@@ -73,6 +78,7 @@ def edit_currency():
 
 # ** currency edit or update to db
 @currencies.route('/admin/currency_edited', methods=['POST'])
+@login_required
 def currency_edited():
     if request.method == "POST":
         try:
@@ -102,6 +108,7 @@ def currency_edited():
 
 # ** currency delete on db
 @currencies.route('/admin/delete_currency', methods=['POST'])
+@login_required
 def delete_currency():
     if request.method == "POST":
         try:

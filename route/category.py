@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, current_app
+from flask_login import login_required
 from werkzeug.utils import secure_filename
 import os
 import sqlite3 as sql
@@ -9,6 +10,7 @@ categories = Blueprint('categories', __name__)
 
 # ** filter db and get all data and throw to category list page
 @categories.route('/admin/category')
+@login_required
 def category():
     # Get the page number from the query parameters (default to 1 if not present)
     page = request.args.get('page', 1, type=int)
@@ -31,12 +33,14 @@ def category():
 
 # ** load to add category page
 @categories.route('/admin/add_category')
+@login_required
 def add_category():
     return render_template('admin/category/add_category.html')
 
 
 # ** category added to db
 @categories.route('/admin/category_added', methods=['POST'])
+@login_required
 def category_added():
     if request.method == "POST":
         try:
@@ -55,6 +59,7 @@ def category_added():
 
 # ** get category detail from category page filter db and throw to edit page
 @categories.route('/admin/edit_category', methods=['GET', 'POST'])
+@login_required
 def edit_category():
     if request.method == 'POST':
         cid = request.form.get("cid", None)
@@ -71,6 +76,7 @@ def edit_category():
 
 # ** category edit or update to db
 @categories.route('/admin/category_edited', methods=['POST'])
+@login_required
 def category_edited():
     if request.method == "POST":
         try:
@@ -94,6 +100,7 @@ def category_edited():
 
 # ** category delete on db
 @categories.route('/admin/delete_category', methods=['POST'])
+@login_required
 def delete_category():
     if request.method == "POST":
         try:

@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, current_app
+from flask_login import login_required
 from werkzeug.utils import secure_filename
 import os
 import sqlite3 as sql
@@ -9,6 +10,7 @@ users = Blueprint('users', __name__)
 
 # ** filter db and get all data and throw to user list page
 @users.route('/admin/user')
+@login_required
 def user():
     # Get the page number from the query parameters (default to 1 if not present)
     page = request.args.get('page', 1, type=int)
@@ -31,12 +33,14 @@ def user():
 
 # ** load to add user page
 @users.route('/admin/add_user')
+@login_required
 def add_user():
     return render_template('admin/user/add_user.html')
 
 
 # ** user added to db
 @users.route('/admin/user_added', methods=['POST'])
+@login_required
 def user_added():
     if request.method == "POST":
         try:
@@ -75,6 +79,7 @@ def user_added():
 
 # ** get user detail from user page filter db and throw to edit page
 @users.route('/admin/edit_user', methods=['GET', 'POST'])
+@login_required
 def edit_user():
     if request.method == 'POST':
         uid = request.form.get("uid", None)
@@ -91,6 +96,7 @@ def edit_user():
 
 # ** user edit or update to db
 @users.route('/admin/user_edited', methods=['POST'])
+@login_required
 def user_edited():
     if request.method == "POST":
         try:
@@ -148,6 +154,7 @@ def user_edited():
 
 # ** user delete on db
 @users.route('/admin/delete_user', methods=['POST'])
+@login_required
 def delete_user():
     if request.method == "POST":
         try:

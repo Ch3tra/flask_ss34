@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, current_app
+from flask_login import login_required
 from werkzeug.utils import secure_filename
 import os
 import sqlite3 as sql
@@ -9,6 +10,7 @@ products = Blueprint('products', __name__)
 
 # ** filter db and get all data and throw to product list page
 @products.route('/admin/product')
+@login_required
 def product():
     # Get the page number from the query parameters (default to 1 if not present)
     page = request.args.get('page', 1, type=int)
@@ -33,6 +35,7 @@ def product():
 
 # ** load to add products page
 @products.route('/admin/add_product')
+@login_required
 def add_product():
     # fetch category names from the database
     query = "SELECT categoryId, categoryName FROM categories"
@@ -43,6 +46,7 @@ def add_product():
 
 # ** product added to db
 @products.route('/admin/product_added', methods=['POST'])
+@login_required
 def product_added():
     if request.method == "POST":
         try:
@@ -83,6 +87,7 @@ def product_added():
 
 # ** get student detail from product page or detail page to filter db and throw to edit page
 @products.route('/admin/edit_product', methods=['GET', 'POST'])
+@login_required
 def edit_product():
     if request.method == 'POST':
         pid = request.form.get("pid", None)
@@ -102,6 +107,7 @@ def edit_product():
 
 # ** Student edit or update to db
 @products.route('/admin/product_edited', methods=['POST'])
+@login_required
 def product_edited():
     if request.method == "POST":
         try:
@@ -165,6 +171,7 @@ def product_edited():
 
 # ** get product details from student page to filter db and throw to detail page
 @products.route('/admin/detail_product', methods=['GET', 'POST'])
+@login_required
 def detail_product():
     if request.method == 'POST':
         pid = request.form.get("pid", None)
@@ -181,6 +188,7 @@ def detail_product():
 
 # ** product delete on db
 @products.route('/admin/delete_product', methods=['POST'])
+@login_required
 def delete_product():
     if request.method == "POST":
         try:
