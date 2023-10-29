@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CodePen - Finance Mobile Application-UX/UI Design Screen One</title>
+    <title>Register</title>
+    <link rel="icon" type="image/png" href="../static/img/title_logo.png">
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
@@ -12,7 +13,7 @@
 
 </head>
 <body>
-<form class="form" action="{{ url_for('register') }}" method="POST">
+<form class="form" action="{{ url_for('auths.register') }}" method="POST">
     <div class="screen-1">
         <svg class="logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
              width="300" height="300" viewbox="0 0 640 480" xml:space="preserve">
@@ -60,6 +61,7 @@
         </div>
 
         <button type="submit" class="login">Register</button>
+        <a style="display: flex; justify-content: center;" href="/admin">Cancel</a>
     </div>
 </form>
 

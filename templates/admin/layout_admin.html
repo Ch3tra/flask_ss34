@@ -39,7 +39,7 @@
                 <a href="#" class="nav-link">POS</a>
             </li>
             <li class="nav-item d-none d-sm-inline-block">
-                <a href="/register" class="nav-link">Register New Admin</a>
+                <a href="{{ url_for('auths.register') }}" class="nav-link">Register New Admin</a>
             </li>
         </ul>
 
@@ -298,7 +298,7 @@
                                 </li>
                             </ul>
                         </li>
-                        <a href="/logout" class="btn btn-default btn-sm"
+                        <a href="{{ url_for('auths.logout') }}" class="btn btn-default btn-sm"
                            style="position: fixed; bottom: 20px; width: 60px;">
                             <span class="glyphicon glyphicon-log-out"></span> Log out
                         </a>
