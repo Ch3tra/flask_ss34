@@ -128,6 +128,7 @@ def admin():
 
 # ** register new admin user
 @app.route('/register', methods=['GET', 'POST'])
+@login_required
 def register():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -140,7 +141,7 @@ def register():
         sql = "INSERT INTO credential (username, password_hash) VALUES (?, ?)"
         execute_query(sql, (username, password_hash), "student_ss34.db", True)
 
-        return redirect(url_for('login'))
+        return redirect(url_for('admin'))
     return render_template('register.html')
 
 
