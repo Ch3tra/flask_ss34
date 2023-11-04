@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'head/head.html' %}
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script type='text/javascript' src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'></script>
+<script type='text/javascript' src='https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<title>POS</title>
+
+<body>
+
+<div id="app" style="position: absolute; top: 0; z-index: 500;" class="container">
+    <div class="row mt-1 p-1"
+         style="border-radius: 5px;
+                    background-color: whitesmoke;
+                    display: flex; justify-content: center; align-items: center;">
+        <a href="/admin">
+            <button
+                    class="btn btn-outline-primary ml-1 mr-1"
+                    type="submit"
+                    style="text-transform: uppercase">
+                Admin
+            </button>
+        </a>
+    </div>
+    <center>
+        <br>
+        <input :class="'btn '+this.color"
+               style="width: 300px; height: 300px; border-radius: 50%;">
+        <br><br>
+        {#        <input#}
+        {#                :class="'btn '+this.color"#}
+        {#                type="button"#}
+        {#                value="Random color"#}
+        {#                @click="changeColor()"#}
+        {#        >#}
+        <input v-if="is_start==false"
+               class="btn"
+               type="button"
+               value="Start Interval"
+               @click="startInterval()"
+        >
+        <input v-if="is_start==true"
+               class="btn"
+               type="button"
+               value="Stop Interval"
+               @click="stopInterval()"
+        >
+    </center>
+</div>
+
+</body>
+<script>
+    var vue_obj = new Vue({
+        el: '#app',
+        delimiters: ["[[", ']]'],
+        data: {
+            //variables
+            message: 'My first VueJS Task',
+            color: 'bg-primary',
+            is_start: false, //declare false to check, run button as start when page run
+        },
+        created() {
+            //run first after refreshed
+        },
+        methods: {
+            changeColor() {
+                let arr_color = [
+                    'btn-primary',
+                    'btn-secondary',
+                    'btn-warning',
+                    'btn-success',
+                    'btn-danger',
+                    'btn-warning',
+                    'btn-info',
+                    'btn-light',
+                    'btn-dark',
+                ]
+                {#let item = arr_color[Math.floor(Math.random() * arr_color.length)];#}
+                let item;
+                do {
+                    item = arr_color[Math.floor(Math.random() * arr_color.length)];
+                } while (item === this.color);
+                this.color = item; //ensure no same color pick two time next to one other
+            }, //function random color as use bootstrap btn type, then set to this.color
+            startInterval() {
+                this.is_start = true
+                this.intervalId = setInterval(() => {
+                    this.changeColor()
+                }, 200);
+            },
+            stopInterval() {
+                this.is_start = false
+                clearInterval(this.intervalId);
+                this.message = "Interval stopped.";
+            }
+        }
+    });
+</script>
+
+</html>

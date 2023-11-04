@@ -105,6 +105,12 @@ def product(name, price_big, price_small, category, image):
                            price_small=price_small, image=image)
 
 
+@app.route('/pos')
+@login_required
+def pos():
+    return render_template('admin/pos.html')
+
+
 # ** handling 404
 @app.errorhandler(404)
 def page_not_found(e):
