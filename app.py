@@ -111,6 +111,11 @@ def pos():
     return render_template('admin/pos.html')
 
 
+# @app.route('/testtt')
+# def testtt():
+#     return render_template('loginn.html')
+
+
 # ** handling 404
 @app.errorhandler(404)
 def page_not_found(e):
