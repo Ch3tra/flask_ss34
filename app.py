@@ -13,7 +13,7 @@ from route.currency import currencies
 
 app = Flask(__name__)
 
-app.secret_key = 'ohboitakeiteasy'  # Change this!
+app.secret_key = 'ohboitakeiteasyss'  # Change this!
 
 login_manager.init_app(app)
 login_manager.login_view = "auths.login"
@@ -109,11 +109,6 @@ def product(name, price_big, price_small, category, image):
 @login_required
 def pos():
     return render_template('admin/pos.html')
-
-
-# @app.route('/testtt')
-# def testtt():
-#     return render_template('loginn.html')
 
 
 # ** handling 404

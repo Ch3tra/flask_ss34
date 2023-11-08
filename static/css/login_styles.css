@@ -71,7 +71,7 @@ body {
     color: #fff;
     font-size: 16px;
     text-transform: uppercase;
-    width: 80px;
+    width: 100px;
     border: 0;
     padding: 10px 0;
     margin-top: 10px;
@@ -120,13 +120,4 @@ body {
         -o-transform: rotate(360deg);
         transform: rotate(360deg);
     }
-}
-
-a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.6);
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    font-size: 12px;
 }
