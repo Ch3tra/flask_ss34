@@ -9,8 +9,8 @@
 
 <form class="form login" action="{{ url_for('auths.register') }}" method="POST">
     <h1>Register</h1>
-    <input type="text" name="username" placeholder="Username">
-    <input type="password" name="password" placeholder="Password">
+    <input type="text" name="username" required placeholder="Username">
+    <input type="password" name="password" required placeholder="Password">
     <button type="submit">Register</button>
     <a style="display: flex; margin-top: 22px;" href="/admin">Cancel</a>
 </form>
