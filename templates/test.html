@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+    <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'></script>
+    <script type='text/javascript' src='https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="../static/admin/fontawesome-free/css/all.min.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-loading-overlay/2.1.7/loadingoverlay.min.js"></script>
+
+    <link rel="stylesheet" href="/static/css/product_card.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Home</title>
+</head>
+<body>
+
+<div id="app">
+    <div>
+        {#slide show#}
+        <nav class="main-header navbar navbar-expand-md bg-info p-0 m-0">
+            <div class="container-fluid p-0 m-0">
+                <a href="https://clinic.phama-tech.com/admin" class="navbar-brand">
+                    <img src="https://i.pinimg.com/originals/6e/cb/91/6ecb91e73eab30f51b0b29a880338147.png"
+                         style="width: 50px;height: 50px;border-radius: 50%">
+                </a>
+                <marquee>
+                <span class="brand-text font-weight-light" style="font-family: Moul;font-size: 20px;color: white">
+                    អ៊ុីឌឿងលក់ចាប់ហួយ
+                </span>
+                    <span class="brand-text font-weight-light" style="font-size: 15px;color: white">
+                        ដបទឹកទើបចូលស្តុកថ្មី! ដបទឹកម៉ូតថ្មីស្អាតៗ ធន់ងាយស្រួលដាក់តាមខ្លួនរក្សាកំដៅ នឹងត្រជាក់បានយូម៉ោង 🥰🥰
+                </span>
+                </marquee>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                {#product_card#}
+                <div class="col-7">
+                    {# category #}
+                    <div class="row"
+                         style="position: sticky; top: 0; z-index: 100"
+                    >
+                        <div class="col-12 p-1 bg-white"
+                             style=" box-shadow: 1px 9px 25px -11px gray"
+                        >
+                            <button type="button" class="btn btn-outline-info"
+                                    style="text-transform: uppercase">category.name
+                            </button>
+                        </div>
+                    </div>
+                    {# prouct #}
+                    <div class="row mt-1" style="max-height: 85vh; overflow: scroll">
+                        <div
+                                v-for="item in this.product_list"
+                                class="col-lg-2 col-md-6 col-sm-6 col-3 mb-3 mt-3"
+                        >
+                            <div
+                                    style="width: 150px"
+                                    class="card"
+                                    @click="selectedItem(item)"
+                            >
+                                <div class="image-container">
+                                    <div class="first">
+                                        <div class="d-flex justify-content-between align-items-end">
+                                            <span class="discount bg-success">category</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="discount mt-1">-10%</span>
+                                        </div>
+                                    </div>
+                                    <img src="/static/image/sting.jpeg"
+                                         class="img-fluid rounded thumbnail-image">
+                                </div>
+                                <div class="product-detail-container p-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="dress-name">[[ item.name ]]</h5>
+                                        <div class="d-flex flex-column mb-2">
+                                            <span class="new-price text-dark">[[ item.price ]]$</span>
+                                            <del class="old-price text-right"
+                                                 style="font-size: 12px; background-color: yellow; color: firebrick"
+                                            >
+                                                [[ item.price - (item.discount / 100 * item.price)  ]]
+                                            </del>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center pt-1">
+                                        <div>
+                                            <i class="fa fa-star-o rating-star"></i>
+                                            <span class="rating-number">4.8</span>
+                                        </div>
+                                        <span class="buy">BUY +</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {#sale_list#}
+                <div class="col-5 p-0 m-0">
+                    <table class="table table-borderless table-striped">
+                        <thead>
+                        <tr class="bg-secondary text-white">
+                            <th>ល.រ</th>
+                            <th>ការពិពណ៌នា</th>
+                            <th>ចំនួន</th>
+                            <th>តម្លៃលក់($)</th>
+                            <th>បញ្ខុះតម្លៃ(%)</th>
+                            <th>សរុប($)</th>
+                            <th>សកម្មភាព</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-if="this.selected_product.length == 0">
+                            <td colspan="7" class="text-center">
+                                <span style="color: #cccc">no record...</span>
+                            </td>
+                        </tr>
+                        <tr
+                                v-for="(item, index) in this.selected_product"
+                        >
+                            <td>[[ index + 1 ]]</td>
+                            <td>[[ item.name ]]</td>
+                            <td>
+                                <input
+                                        style="width: 100px; text-align: center"
+
+                                        type="number"
+                                        v-model="item.qty"
+                                >
+                            </td>
+                            <td>[[ item.price ]]</td>
+                            <td>0.0 %</td>
+                            <td>[[ item.qty * item.price ]]</td>
+                            <td>
+                                <a href="#" class="text-danger">
+                                     <i class="fas fa-trash"></i>
+                                    លុប
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    var vue_obj = new Vue({
+        el: '#app',
+        delimiters: ["[[", ']]'],
+        data: {
+            /*declare variable*/
+            message: 'My first VueJS Task',
+            group: 'SS3.4',
+            color: 'bg-primary',
+            product_list: [],
+            selected_product: []
+            {#html_content: "<div class='bg-danger'><h1>Vue Js Template</h1></div>"#}
+        },
+        created() {
+            /*run code after page refreshed*/
+        },
+        methods: {
+            changeColor() {
+
+                let arr_color = [
+                    'bg-danger',
+                    'bg-primary',
+                    'bg-secondary',
+                    'bg-warning',
+                ]
+                let item = arr_color[Math.floor(Math.random() * arr_color.length)];
+                this.color = item
+            },
+            selectedItem(item) {
+                let dpl = false
+                this.selected_product.forEach(obj => {
+                    if (obj.name == item.name) {
+                        dpl = true
+                    }
+                })
+
+                if (dpl == false) {
+                    this.selected_product.push(
+                        {
+                            'name': item.name,
+                            'qty': 1,
+                            'price': item.price,
+                            'discount': 0,
+                            'image': item.image,
+                        }
+                    )
+                } else {
+                    this.selected_product.forEach(obj => {
+                        if (obj.name == item.name) {
+                            obj.qty++
+                        }
+                    })
+                }
+            }
+        },
+        mounted() {
+             $.LoadingOverlay("show");
+            axios.get('http://127.0.0.1:5000/getAllProduct').then(response => {
+                this.product_list = response.data
+                $.LoadingOverlay("hide");
+            })
+        }
+    });
+</script>
+</html>

@@ -5,52 +5,98 @@
 <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js'></script>
 <script type='text/javascript' src='https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js'></script>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <title>POS</title>
 
 <body>
 
-<div id="app" style="position: absolute; top: 0; z-index: 500;" class="container">
-    <div class="row mt-1 p-1"
-         style="border-radius: 5px;
-                    background-color: whitesmoke;
-                    display: flex; justify-content: center; align-items: center;">
-        <a href="/admin">
-            <button
-                    class="btn btn-outline-primary ml-1 mr-1"
-                    type="submit"
-                    style="text-transform: uppercase">
-                Admin
-            </button>
-        </a>
+<div id="app" style="position: absolute; top: 0; z-index: 500; width: 95%;" class="container-fluid">
+    <div class="row" style="margin-bottom: 20px; border-radius: 5px; background-color: whitesmoke;">
+        <div class="col">
+            <a href="/admin">
+                <button
+                        class="btn btn-outline-primary ml-1 mr-1"
+                        type="submit"
+                        style="text-transform: uppercase">
+                    Admin
+                </button>
+            </a>
+        </div>
     </div>
-    <div id="app">
-    <center>
-        <br>
-        <input :class="'btn '+this.color"
-               style="width: 300px; height: 300px; border-radius: 50%;" disabled>
-        <br><br>
-        {#        <input#}
-        {#                :class="'btn '+this.color"#}
-        {#                type="button"#}
-        {#                value="Random color"#}
-        {#                @click="changeColor()"#}
-        {#        >#}
-        <input v-if="is_start==false"
-               class="btn"
-               type="button"
-               value="Start Interval"
-               @click="startInterval()"
-        >
-        <input v-if="is_start==true"
-               class="btn"
-               type="button"
-               value="Stop Interval"
-               @click="stopInterval()"
-        >
-    </center>
+    <div class="row">
+        <div class="col-lg-7" style="background-color: #bccc85;">
+            <!-- product -->
+            <div class="row" style="max-height: 85vh; overflow: scroll">
+                <!-- after api call, for each ele in array product_list to generate product card, detail -->
+                <div v-for="item in this.product_list" class="col-lg-3">
+                    <!-- @click event call method selectedItem(item) with item for each as parameter to -->
+                    <div class="card" style="width: 260px; height: 415px;" @click="selectedItem(item)">
+                        <div class="imgBox">
+                            <img src="/static/img/viper.png" class="mouse">
+                        </div>
+                        <div class="contentBox">
+                            <h3 style="margin-top: 5px;">[[ item.name ]]</h3>
+                            <h2 style="margin-top: 5px;" class="price">[[ item.price ]]$</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5" style="background-color: gold;">
+            <!-- sale_list -->
+            <table class="table table-borderless table-striped">
+                <thead>
+                <tr class="bg-secondary text-white">
+                    <th>ល.រ</th>
+                    <th>ការពិពណ៌នា</th>
+                    <th>ចំនួន</th>
+                    <th>តម្លៃលក់($)</th>
+                    <th>បញ្ខុះតម្លៃ(%)</th>
+                    <th>សរុប($)</th>
+                    <th>សកម្មភាព</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tbody>
+                <!-- check if no product click yet -->
+                <tr v-if="this.selected_product.length == 0">
+                    <td colspan="7" class="text-center">
+                        <span style="color: #cccc">no record...</span>
+                    </td>
+                </tr>
+                <!-- after product click, @click event called, for each selected_product since event will push item to selected_product -->
+                <tr
+                        v-for="(item, index) in this.selected_product"
+                >
+                    <td>[[ index + 1 ]]</td>
+                    <td>[[ item.name ]]</td>
+                    <td>
+                        <input
+                                style="width: 100px; text-align: center"
+                                type="number" min="0" maxlength="10000"
+                                v-model="item.qty"
+                        >
+                    </td>
+                    <td>[[ item.price ]]</td>
+                    <td>0.0 %</td>
+                    <td>[[ item.qty * item.price ]]</td>
+                    <td>
+                        <a href="#" class="text-danger">
+                            <i class="fas fa-trash"></i>
+                            លុប
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 </body>
+
 <script>
     var vue_obj = new Vue({
         el: '#app',
@@ -60,6 +106,8 @@
             message: 'My first VueJS Task',
             color: 'bg-primary',
             is_start: false, //declare false to check, run button as start when page run
+            product_list: [],
+            selected_product: []
         },
         created() {
             //run first after refreshed
@@ -94,9 +142,46 @@
                 this.is_start = false
                 clearInterval(this.intervalId);
                 this.message = "Interval stopped.";
+            },
+            //event for @click on product
+            selectedItem(item) {
+                let dpl = false
+                //for each for duplicate product click
+                this.selected_product.forEach(obj => {
+                    if (obj.name == item.name) {
+                        dpl = true
+                    }
+                })
+
+                //if no duplicate product click, just push item to selected_product
+                if (dpl == false) {
+                    this.selected_product.push(
+                        {
+                            'name': item.name,
+                            'qty': 1,
+                            'price': item.price,
+                            'discount': 0,
+                            'image': item.image,
+                        }
+                    )
+                    //if there is, just update qty + 1 as product qty increase
+                } else {
+                    this.selected_product.forEach(obj => {
+                        if (obj.name == item.name) {
+                            obj.qty++
+                        }
+                    })
+                }
             }
+        },
+        mounted() {
+            //get api which get all project as json file, put to product_list array
+            axios.get('http://127.0.0.1:5000/getAllProduct')
+                .then(response => {
+                    this.product_list = response.data
+                })
         }
-    });
+    })
 </script>
 
 </html>

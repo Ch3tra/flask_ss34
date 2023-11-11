@@ -3,15 +3,17 @@ import randomname
 import random
 from flask_login import login_required
 
+from route.apiProduct import apiD
 from route.auth import auths, login_manager
-from route.category import categories
 from route.product import products
 from route.student import students
 from route.customer import customers
 from route.user import users
+from route.category import categories
 from route.currency import currencies
 
 app = Flask(__name__)
+
 
 app.secret_key = 'ohboitakeiteasyss'  # Change this!
 
@@ -25,10 +27,11 @@ app.config['UPLOAD_FOLDER_USER'] = 'static/img/user'
 
 app.register_blueprint(students)
 app.register_blueprint(products)
-app.register_blueprint(categories)
 app.register_blueprint(customers)
-app.register_blueprint(users)
 app.register_blueprint(currencies)
+app.register_blueprint(users)
+app.register_blueprint(categories)
+app.register_blueprint(apiD)
 app.register_blueprint(auths, url_prefix='/auth')
 
 

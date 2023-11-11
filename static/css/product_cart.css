@@ -44,15 +44,15 @@ body {
   transform: skewY(390deg);
 }
 
-.card::after {
-  content: "GAMING";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  font-weight: 600;
-  font-size: 6em;
-  color: rgba(0, 0, 0, 0.1);
-}
+/*.card::after {*/
+/*  content: "GAMING";*/
+/*  position: absolute;*/
+/*  bottom: 0;*/
+/*  left: 0;*/
+/*  font-weight: 600;*/
+/*  font-size: 6em;*/
+/*  color: rgba(0, 0, 0, 0.1);*/
+/*}*/
 
 .card .imgBox {
   position: relative;
@@ -121,6 +121,6 @@ body {
 }
 
 .mouse {
-  height: 300px;
+  height: 280px;
   width: auto;
 }

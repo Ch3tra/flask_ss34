@@ -1,8 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, current_app
 from flask_login import login_required
-from werkzeug.utils import secure_filename
-import os
-import sqlite3 as sql
 from config import execute_query
 
 categories = Blueprint('categories', __name__)
