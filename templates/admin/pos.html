@@ -42,21 +42,20 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-5" style="background-color: gold;">
+        <div class="col-lg-5" style="background-color: #bed96d;">
             <!-- sale_list -->
             <table class="table table-borderless table-striped">
                 <thead>
                 <tr class="bg-secondary text-white">
-                    <th>ល.រ</th>
+                    <th style="text-align: center;">ល.រ</th>
                     <th>ការពិពណ៌នា</th>
-                    <th>ចំនួន</th>
-                    <th>តម្លៃលក់($)</th>
-                    <th>បញ្ខុះតម្លៃ(%)</th>
-                    <th>សរុប($)</th>
-                    <th>សកម្មភាព</th>
+                    <th style="text-align: center;">ចំនួន</th>
+                    <th style="text-align: center;">តម្លៃលក់($)</th>
+                    <th style="text-align: center;">បញ្ខុះតម្លៃ(%)</th>
+                    <th style="text-align: center;">សរុប($)</th>
+                    <th style="text-align: center;">សកម្មភាព</th>
                 </tr>
                 </thead>
-                <tbody>
                 <tbody>
                 <!-- check if no product click yet -->
                 <tr v-if="this.selected_product.length == 0">
@@ -68,18 +67,20 @@
                 <tr
                         v-for="(item, index) in this.selected_product"
                 >
-                    <td>[[ index + 1 ]]</td>
+                    <td style="text-align: center;">[[ index + 1 ]]</td>
                     <td>[[ item.name ]]</td>
-                    <td>
+                    <td style="text-align: center;">
                         <input
-                                style="width: 100px; text-align: center"
+                                style="width: 50%; text-align: center"
                                 type="number" min="0" maxlength="10000"
                                 v-model="item.qty"
                         >
                     </td>
-                    <td>[[ item.price ]]</td>
-                    <td>0.0 %</td>
-                    <td>[[ item.qty * item.price ]]</td>
+                    <td style="text-align: center;">[[ item.price ]]</td>
+                    <td style="text-align: center;">[[ item.discount * 100 ]] %</td>
+                    <td style="text-align: center;">
+                        [[ ((item.qty * item.price) - (item.qty * item.price * item.discount)).toFixed(2) ]]
+                    </td>
                     <td>
                         <a href="#" class="text-danger">
                             <i class="fas fa-trash"></i>
@@ -87,7 +88,6 @@
                         </a>
                     </td>
                 </tr>
-                </tbody>
                 </tbody>
             </table>
         </div>
@@ -160,7 +160,7 @@
                             'name': item.name,
                             'qty': 1,
                             'price': item.price,
-                            'discount': 0,
+                            'discount': item.discount / 100,
                             'image': item.image,
                         }
                     )
