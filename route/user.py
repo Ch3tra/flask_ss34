@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, redirect, current_app
 from flask_login import login_required
 from werkzeug.utils import secure_filename
 import os
-import sqlite3 as sql
 from config import execute_query
 
 users = Blueprint('users', __name__)
@@ -22,10 +21,16 @@ def user():
     offset = (page - 1) * records_per_page
 
     # Use the helper function to execute the query
-    rows = execute_query("SELECT * FROM users LIMIT ? OFFSET ?", (records_per_page, offset))
+    rows = execute_query("SELECT * FROM users LIMIT %s OFFSET %s", (records_per_page, offset))
 
-    # Calculate the total number of pages
-    total_records = execute_query("SELECT COUNT(*) FROM users")[0][0]
+    # Get total count of records
+    total_records_query = "SELECT COUNT(*) FROM users"
+    total_records_result = execute_query(total_records_query)
+
+    # Extract the total count based on the structure of the result
+    total_records = total_records_result[0][0] if isinstance(total_records_result[0], (list, tuple)) else \
+        total_records_result[0]['COUNT(*)']
+
     total_pages = (total_records // records_per_page) + (total_records % records_per_page > 0)
 
     return render_template('admin/user/index.html', rows=rows, page=page, total_pages=total_pages)
@@ -64,10 +69,10 @@ def user_added():
                 filename = secure_filename(f"{name}{extension}")
                 image.save(os.path.join(current_app.config['UPLOAD_FOLDER_USER'], filename))
 
-                query = "INSERT INTO users (userName,status, image) VALUES (?,?,?)"
+                query = "INSERT INTO users (userName,status, image) VALUES (%s,%s,%s)"
                 params = (name, status, filename)
             else:
-                query = "INSERT INTO users (userName,status) VALUES (?,?)"
+                query = "INSERT INTO users (userName,status) VALUES (%s,%s)"
                 params = (name, status)
 
             execute_query(query, params, is_insert=True)
@@ -86,7 +91,7 @@ def edit_user():
         page = request.form['page_id']
 
         # ** cid pass as parameter to prevent sql injection
-        query = f"SELECT * FROM users WHERE userId = ?"
+        query = f"SELECT * FROM users WHERE userId = %s"
         rows = execute_query(query, (uid,))
 
         return render_template('admin/user/edit_user.html', rows=rows, page=page)
@@ -119,7 +124,7 @@ def user_edited():
                     return 'File size is too large. The maximum file size is 2MB.', 400
 
                 # Get the old image filename from the database
-                old_image_query = "SELECT image FROM users WHERE userId = ?"
+                old_image_query = "SELECT image FROM users WHERE userId = %s"
                 old_image_filename = execute_query(old_image_query, (uid,), is_insert=False)[0]['image']
 
                 # Delete the old image file
@@ -133,16 +138,16 @@ def user_edited():
                 image.save(os.path.join(current_app.config['UPLOAD_FOLDER_USER'], filename))
 
                 query = f"UPDATE users SET " \
-                        f"userName = ?, " \
-                        f"status = ?, " \
-                        f"image = ? " \
-                        f"WHERE userId = ?"
+                        f"userName = %s, " \
+                        f"status = %s, " \
+                        f"image = %s " \
+                        f"WHERE userId = %s"
                 params = (name, status, filename, uid)
             else:
                 query = f"UPDATE users SET " \
-                        f"userName = ?, " \
-                        f"status = ? " \
-                        f"WHERE userId = ?"
+                        f"userName = %s, " \
+                        f"status = %s " \
+                        f"WHERE userId = %s"
                 params = (name, status, uid)
 
             execute_query(query, params, is_insert=True)
@@ -168,7 +173,7 @@ def delete_user():
                 if os.path.isfile(image_path):
                     os.remove(image_path)
 
-            query = f"DELETE FROM users WHERE userId = ?"
+            query = f"DELETE FROM users WHERE userId = %s"
             execute_query(query, (uid,), is_insert=True)
 
             return redirect('/admin/user?page=' + page_id)

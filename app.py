@@ -2,7 +2,6 @@ from flask import Flask, render_template, request
 import randomname
 import random
 from flask_login import login_required
-
 from route.apiProduct import apiD
 from route.auth import auths, login_manager
 from route.product import products

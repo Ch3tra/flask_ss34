@@ -16,13 +16,13 @@ class User(UserMixin):
         self.password_hash = password_hash
 
     def get(user_id):
-        query = f"SELECT * FROM credential WHERE userId = ?"
+        query = f"SELECT * FROM credential WHERE userId = %s"
         user_data = execute_query(query, (user_id,))
         if user_data:
             return User(user_data[0]['userId'], user_data[0]['username'], user_data[0]['password_hash'])
 
     def get_by_username(username):
-        query = f"SELECT * FROM credential WHERE username = ?"
+        query = f"SELECT * FROM credential WHERE username = %s"
         user_data = execute_query(query, (username,))
         if user_data:
             return User(user_data[0]['userId'], user_data[0]['username'], user_data[0]['password_hash'])
@@ -48,8 +48,8 @@ def register():
         password_hash = generate_password_hash(password)
 
         # Insert the new user into the database
-        sql = "INSERT INTO credential (username, password_hash) VALUES (?, ?)"
-        execute_query(sql, (username, password_hash), "student_ss34.db", True)
+        sql = "INSERT INTO credential (username, password_hash) VALUES (%s, %s)"
+        execute_query(sql, (username, password_hash), "ss34_proo", True)
 
         return redirect(url_for('admin'))
     return render_template('register.html')

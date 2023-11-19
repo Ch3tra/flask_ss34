@@ -1,15 +1,24 @@
-import sqlite3 as sql
+import pymysql
 
 
-def execute_query(query, params=(), database="student_ss34.db", is_insert=False):
-    con = sql.connect(database)
-    con.row_factory = sql.Row
-    cur = con.cursor()
-    cur.execute(query, params)
+def execute_query(query, params=(), database="ss34_proo", is_insert=False):
+    connection = pymysql.connect(
+        host='localhost',
+        user='root',
+        password='',
+        database=database,
+        cursorclass=pymysql.cursors.DictCursor
+    )
 
-    if is_insert:
-        con.commit()
-        return
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(query, params)
 
-    rows = cur.fetchall()
-    return rows
+            if is_insert:
+                connection.commit()
+                return
+
+            rows = cursor.fetchall()
+            return rows
+    finally:
+        connection.close()

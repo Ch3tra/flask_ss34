@@ -119,21 +119,21 @@
         <!-- Pagination Links -->
         <div style="margin-top: 20px" class="text-center">
             {% if page > 1 %}
-                <a href="{{ url_for('products.product', page=1) }}" class="btn btn-outline-dark">First</a>
-                <a href="{{ url_for('products.product', page=page-1) }}" class="btn btn-outline-dark"><</a>
+                <a href="{{ url_for('currencies.currency', page=1) }}" class="btn btn-outline-dark">First</a>
+                <a href="{{ url_for('currencies.currency', page=page-1) }}" class="btn btn-outline-dark"><</a>
                 {% if page-2 >= 1 %}
-                    <a href="{{ url_for('products.product', page=page-2) }}"
+                    <a href="{{ url_for('currencies.currency', page=page-2) }}"
                        class="btn btn-outline-dark">{{ page-2 }}</a>
                 {% endif %}
             {% endif %}
             <span>---Page {{ page }}---</span>
             {% if page < total_pages %}
                 {% if page+2 <= total_pages %}
-                    <a href="{{ url_for('products.product', page=page+2) }}" class="btn btn-outline-dark">
+                    <a href="{{ url_for('currencies.currency', page=page+2) }}" class="btn btn-outline-dark">
                         {{ page+2 }}</a>
                 {% endif %}
-                <a href="{{ url_for('products.product', page=page+1) }}" class="btn btn-outline-dark">></a>
-                <a href="{{ url_for('products.product', page=total_pages) }}" class="btn btn-outline-dark">Last</a>
+                <a href="{{ url_for('currencies.currency', page=page+1) }}" class="btn btn-outline-dark">></a>
+                <a href="{{ url_for('currencies.currency', page=total_pages) }}" class="btn btn-outline-dark">Last</a>
             {% endif %}
         </div>
     </div>

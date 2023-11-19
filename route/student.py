@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, redirect, current_app
 from flask_login import login_required
 from werkzeug.utils import secure_filename
 import os
-import sqlite3 as sql
 from config import execute_query
 
 students = Blueprint('students', __name__)
@@ -22,10 +21,16 @@ def student():
     offset = (page - 1) * records_per_page
 
     # Use the helper function to execute the query
-    rows = execute_query("SELECT * FROM students LIMIT ? OFFSET ?", (records_per_page, offset))
+    rows = execute_query("SELECT * FROM student LIMIT %s OFFSET %s", (records_per_page, offset))
 
-    # Calculate the total number of pages
-    total_records = execute_query("SELECT COUNT(*) FROM students")[0][0]
+    # Get total count of records
+    total_records_query = "SELECT COUNT(*) FROM student"
+    total_records_result = execute_query(total_records_query)
+
+    # Extract the total count based on the structure of the result
+    total_records = total_records_result[0][0] if isinstance(total_records_result[0], (list, tuple)) else \
+        total_records_result[0]['COUNT(*)']
+
     total_pages = (total_records // records_per_page) + (total_records % records_per_page > 0)
 
     return render_template('admin/student/index.html', rows=rows, page=page, total_pages=total_pages)
@@ -69,10 +74,10 @@ def student_added():
                 filename = secure_filename(f"{firstname}_{lastname}{extension}")
                 image.save(os.path.join(current_app.config['UPLOAD_FOLDER_STUDENT'], filename))
 
-                query = "INSERT INTO students (firstName,lastName,birthday,gender,email,phoneNumber,subject,image) VALUES (?,?,?,?,?,?,?,?)"
+                query = "INSERT INTO student (firstName,lastName,birthday,gender,email,phoneNumber,subject,image) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)"
                 params = (firstname, lastname, birthday, gender, email, phone, subject, filename)
             else:
-                query = "INSERT INTO students (firstName,lastName,birthday,gender,email,phoneNumber,subject) VALUES (?,?,?,?,?,?,?)"
+                query = "INSERT INTO student (firstName,lastName,birthday,gender,email,phoneNumber,subject) VALUES (%s,%s,%s,%s,%s,%s,%s)"
                 params = (firstname, lastname, birthday, gender, email, phone, subject)
 
             execute_query(query, params, is_insert=True)
@@ -91,7 +96,7 @@ def edit_student():
         page = request.form['page_id']
 
         # ** student_sid pass as parameter to prevent sql injection
-        query = f"SELECT * FROM students WHERE sid = ?"
+        query = f"SELECT * FROM student WHERE sid = %s"
         rows = execute_query(query, (student_sid,))
 
         return render_template('admin/student/edit_student.html', rows=rows, page=page)
@@ -129,7 +134,7 @@ def student_edited():
                     return 'File size is too large. The maximum file size is 2MB.', 400
 
                 # Get the old image filename from the database
-                old_image_query = "SELECT image FROM students WHERE sid = ?"
+                old_image_query = "SELECT image FROM student WHERE sid = %s"
                 old_image_filename = execute_query(old_image_query, (sid,), is_insert=False)[0]['image']
 
                 # Delete the old image file
@@ -142,27 +147,27 @@ def student_edited():
                 filename = secure_filename(f"{firstname}_{lastname}{extension}")
                 image.save(os.path.join(current_app.config['UPLOAD_FOLDER_STUDENT'], filename))
 
-                query = f"UPDATE students SET " \
-                        f"firstName = ?, " \
-                        f"lastName = ?, " \
-                        f"birthday = ?, " \
-                        f"gender = ?, " \
-                        f"email = ?, " \
-                        f"phoneNumber = ?, " \
-                        f"subject = ?, " \
-                        f"image = ? " \
-                        f"WHERE sid = ?"
+                query = f"UPDATE student SET " \
+                        f"firstName = %s, " \
+                        f"lastName = %s, " \
+                        f"birthday = %s, " \
+                        f"gender = %s, " \
+                        f"email = %s, " \
+                        f"phoneNumber = %s, " \
+                        f"subject = %s, " \
+                        f"image = %s " \
+                        f"WHERE sid = %s"
                 params = (firstname, lastname, birthday, gender, email, phone, subject, filename, sid)
             else:
-                query = f"UPDATE students SET " \
-                        f"firstName = ?, " \
-                        f"lastName = ?, " \
-                        f"birthday = ?, " \
-                        f"gender = ?, " \
-                        f"email = ?, " \
-                        f"phoneNumber = ?, " \
-                        f"subject = ? " \
-                        f"WHERE sid = ?"
+                query = f"UPDATE student SET " \
+                        f"firstName = %s, " \
+                        f"lastName = %s, " \
+                        f"birthday = %s, " \
+                        f"gender = %s, " \
+                        f"email = %s, " \
+                        f"phoneNumber = %s, " \
+                        f"subject = %s " \
+                        f"WHERE sid = %s"
                 params = (firstname, lastname, birthday, gender, email, phone, subject, sid)
 
             execute_query(query, params, is_insert=True)
@@ -181,7 +186,7 @@ def detail_student():
         page = request.form['page_id']
 
         # ** student_sid pass as parameter to prevent sql injection
-        query = f"SELECT * FROM students WHERE sid = ?"
+        query = f"SELECT * FROM student WHERE sid = %s"
         rows = execute_query(query, (student_sid,))
 
         return render_template('admin/student/detail_student.html', rows=rows, page=page)
@@ -205,7 +210,7 @@ def delete_student():
                 if os.path.isfile(image_path):
                     os.remove(image_path)
 
-            query = f"DELETE FROM students WHERE sid = ?"
+            query = f"DELETE FROM student WHERE sid = %s"
             execute_query(query, (sid,), is_insert=True)
 
             return redirect('/admin/student?page=' + page_id)

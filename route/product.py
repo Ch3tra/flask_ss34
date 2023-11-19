@@ -16,18 +16,24 @@ def product():
     page = request.args.get('page', 1, type=int)
 
     # Define the number of records per page
-    records_per_page = 10
+    records_per_page = 2
 
     # Calculate the offset based on the current page
     offset = (page - 1) * records_per_page
 
     # use inner to get category name from categories table according to category id in products table
     rows = execute_query(
-        "SELECT products.*, categories.categoryName AS category_name FROM products LEFT JOIN categories ON products.categoryId = categories.categoryId LIMIT ? OFFSET ?",
+        "SELECT product.*, category.categoryName AS category_name FROM product LEFT JOIN category ON product.categoryId = category.categoryId LIMIT %s OFFSET %s",
         (records_per_page, offset))
 
-    # Calculate the total number of pages
-    total_records = execute_query("SELECT COUNT(*) FROM products")[0][0]
+    # Get total count of records
+    total_records_query = "SELECT COUNT(*) FROM product"
+    total_records_result = execute_query(total_records_query)
+
+    # Extract the total count based on the structure of the result
+    total_records = total_records_result[0][0] if isinstance(total_records_result[0], (list, tuple)) else \
+        total_records_result[0]['COUNT(*)']
+
     total_pages = (total_records // records_per_page) + (total_records % records_per_page > 0)
 
     return render_template('admin/product/index.html', rows=rows, page=page, total_pages=total_pages)
@@ -38,7 +44,7 @@ def product():
 @login_required
 def add_product():
     # fetch category names from the database
-    query = "SELECT categoryId, categoryName FROM categories"
+    query = "SELECT categoryId, categoryName FROM category"
     categories = execute_query(query)
 
     return render_template('admin/product/add_product.html', categories=categories)
@@ -72,10 +78,10 @@ def product_added():
                 filename = secure_filename(f"{name}{extension}")
                 image.save(os.path.join(current_app.config['UPLOAD_FOLDER_PRODUCT'], filename))
 
-                query = "INSERT INTO products (productName,productDesc,productCost,categoryId,image) VALUES (?,?,?,?,?)"
+                query = "INSERT INTO product (productName,productDesc,productCost,categoryId,image) VALUES (%s,%s,%s,%s,%s)"
                 params = (name, description, cost, category, filename)
             else:
-                query = "INSERT INTO products (productName,productDesc,productCost,categoryId) VALUES (?,?,?,?)"
+                query = "INSERT INTO product (productName,productDesc,productCost,categoryId) VALUES (%s,%s,%s,%s)"
                 params = (name, description, cost, category)
 
             execute_query(query, params, is_insert=True)
@@ -94,10 +100,10 @@ def edit_product():
         page = request.form['page_id']
 
         # Fetch all categories
-        all_categories = execute_query("SELECT * FROM categories")
+        all_categories = execute_query("SELECT * FROM category")
 
         # ** student_sid pass as parameter to prevent sql injection
-        query = f"SELECT products.*, categories.categoryName AS category_name FROM products LEFT JOIN categories ON products.categoryId = categories.categoryId WHERE products.productId = ?"
+        query = f"SELECT product.*, category.categoryName AS category_name FROM product LEFT JOIN category ON product.categoryId = category.categoryId WHERE product.productId = %s"
         rows = execute_query(query, (pid,))
 
         return render_template('admin/product/edit_product.html', rows=rows, page=page, categories=all_categories)
@@ -132,7 +138,7 @@ def product_edited():
                     return 'File size is too large. The maximum file size is 2MB.', 400
 
                 # Get the old image filename from the database
-                old_image_query = "SELECT image FROM products WHERE productId = ?"
+                old_image_query = "SELECT image FROM product WHERE productId = %s"
                 old_image_filename = execute_query(old_image_query, (pid,), is_insert=False)[0]['image']
 
                 # Delete the old image file
@@ -145,21 +151,21 @@ def product_edited():
                 filename = secure_filename(f"{name}{extension}")
                 image.save(os.path.join(current_app.config['UPLOAD_FOLDER_PRODUCT'], filename))
 
-                query = f"UPDATE products SET " \
-                        f"categoryId = ?, " \
-                        f"productName = ?, " \
-                        f"productDesc = ?, " \
-                        f"productCost = ?, " \
-                        f"image = ? " \
-                        f"WHERE productId = ?"
+                query = f"UPDATE product SET " \
+                        f"categoryId = %s, " \
+                        f"productName = %s, " \
+                        f"productDesc = %s, " \
+                        f"productCost = %s, " \
+                        f"image = %s " \
+                        f"WHERE productId = %s"
                 params = (category, name, description, cost, filename, pid)
             else:
-                query = f"UPDATE products SET " \
-                        f"categoryId = ?, " \
-                        f"productName = ?, " \
-                        f"productDesc = ?, " \
-                        f"productCost = ? " \
-                        f"WHERE productId = ?"
+                query = f"UPDATE product SET " \
+                        f"categoryId = %s, " \
+                        f"productName = %s, " \
+                        f"productDesc = %s, " \
+                        f"productCost = %s " \
+                        f"WHERE productId = %s"
                 params = (category, name, description, cost, pid)
 
             execute_query(query, params, is_insert=True)
@@ -178,7 +184,7 @@ def detail_product():
         page = request.form['page_id']
 
         # ** student_sid pass as parameter to prevent sql injection
-        query = f"SELECT products.*, categories.categoryName AS category_name FROM products LEFT JOIN categories ON products.categoryId = categories.categoryId WHERE products.productId = ?"
+        query = f"SELECT product.*, category.categoryName AS category_name FROM product LEFT JOIN category ON product.categoryId = category.categoryId WHERE product.productId = %s"
         rows = execute_query(query, (pid,))
 
         return render_template('admin/product/detail_product.html', rows=rows, page=page)
@@ -202,7 +208,7 @@ def delete_product():
                 if os.path.isfile(image_path):
                     os.remove(image_path)
 
-            query = f"DELETE FROM products WHERE productId = ?"
+            query = f"DELETE FROM product WHERE productId = %s"
             execute_query(query, (pid,), is_insert=True)
 
             return redirect('/admin/product?page=' + page_id)

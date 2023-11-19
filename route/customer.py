@@ -2,7 +2,6 @@ from flask import Blueprint, render_template, request, redirect, current_app
 from flask_login import login_required
 from werkzeug.utils import secure_filename
 import os
-import sqlite3 as sql
 from config import execute_query
 
 customers = Blueprint('customers', __name__)
@@ -22,10 +21,16 @@ def customer():
     offset = (page - 1) * records_per_page
 
     # Use the helper function to execute the query
-    rows = execute_query("SELECT * FROM customers LIMIT ? OFFSET ?", (records_per_page, offset))
+    rows = execute_query("SELECT * FROM customer LIMIT %s OFFSET %s", (records_per_page, offset))
 
-    # Calculate the total number of pages
-    total_records = execute_query("SELECT COUNT(*) FROM customers")[0][0]
+    # Get total count of records
+    total_records_query = "SELECT COUNT(*) FROM customer"
+    total_records_result = execute_query(total_records_query)
+
+    # Extract the total count based on the structure of the result
+    total_records = total_records_result[0][0] if isinstance(total_records_result[0], (list, tuple)) else \
+        total_records_result[0]['COUNT(*)']
+
     total_pages = (total_records // records_per_page) + (total_records % records_per_page > 0)
 
     return render_template('admin/customer/index.html', rows=rows, page=page, total_pages=total_pages)
@@ -64,10 +69,10 @@ def customer_added():
                 filename = secure_filename(f"{name}{extension}")
                 image.save(os.path.join(current_app.config['UPLOAD_FOLDER_CUSTOMER'], filename))
 
-                query = "INSERT INTO customers (customerName,status, image) VALUES (?,?,?)"
+                query = "INSERT INTO customer (customerName,status, image) VALUES (%s,%s,%s)"
                 params = (name, status, filename)
             else:
-                query = "INSERT INTO customers (customerName,status) VALUES (?,?)"
+                query = "INSERT INTO customer (customerName,status) VALUES (%s,%s)"
                 params = (name, status)
 
             execute_query(query, params, is_insert=True)
@@ -86,7 +91,7 @@ def edit_customer():
         page = request.form['page_id']
 
         # ** cid pass as parameter to prevent sql injection
-        query = f"SELECT * FROM customers WHERE customerId = ?"
+        query = f"SELECT * FROM customer WHERE customerId = %s"
         rows = execute_query(query, (cid,))
 
         return render_template('admin/customer/edit_customer.html', rows=rows, page=page)
@@ -119,7 +124,7 @@ def customer_edited():
                     return 'File size is too large. The maximum file size is 2MB.', 400
 
                 # Get the old image filename from the database
-                old_image_query = "SELECT image FROM customers WHERE customerId = ?"
+                old_image_query = "SELECT image FROM customer WHERE customerId = %s"
                 old_image_filename = execute_query(old_image_query, (cid,), is_insert=False)[0]['image']
 
                 # Delete the old image file
@@ -132,17 +137,17 @@ def customer_edited():
                 filename = secure_filename(f"{name}{extension}")
                 image.save(os.path.join(current_app.config['UPLOAD_FOLDER_CUSTOMER'], filename))
 
-                query = f"UPDATE customers SET " \
-                        f"customerName = ?, " \
-                        f"status = ?, " \
-                        f"image = ? " \
-                        f"WHERE customerId = ?"
+                query = f"UPDATE customer SET " \
+                        f"customerName = %s, " \
+                        f"status = %s, " \
+                        f"image = %s " \
+                        f"WHERE customerId = %s"
                 params = (name, status, filename, cid)
             else:
-                query = f"UPDATE customers SET " \
-                        f"customerName = ?, " \
-                        f"status = ? " \
-                        f"WHERE customerId = ?"
+                query = f"UPDATE customer SET " \
+                        f"customerName = %s, " \
+                        f"status = %s " \
+                        f"WHERE customerId = %s"
                 params = (name, status, cid)
 
             execute_query(query, params, is_insert=True)
@@ -168,7 +173,7 @@ def delete_customer():
                 if os.path.isfile(image_path):
                     os.remove(image_path)
 
-            query = f"DELETE FROM customers WHERE customerId = ?"
+            query = f"DELETE FROM customer WHERE customerId = %s"
             execute_query(query, (cid,), is_insert=True)
 
             return redirect('/admin/customer?page=' + page_id)

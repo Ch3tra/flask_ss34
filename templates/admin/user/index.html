@@ -50,7 +50,7 @@
                                         <tbody class="text-gray-600 text-sm font-light">
                                         <tr class="border-b border-gray-200 hover:bg-gray-100">
                                             <td class="py-3 px-6 text-left whitespace-nowrap">
-                                                <span class="font-medium">{{ item.userName }}</span>
+                                                <span class="font-medium">{{ item.username }}</span>
                                             </td>
                                             <td class="py-3 px-6 text-center">
                                                 <div class="flex items-center justify-center">
@@ -117,21 +117,21 @@
         <!-- Pagination Links -->
         <div style="margin-top: 20px" class="text-center">
             {% if page > 1 %}
-                <a href="{{ url_for('products.product', page=1) }}" class="btn btn-outline-dark">First</a>
-                <a href="{{ url_for('products.product', page=page-1) }}" class="btn btn-outline-dark"><</a>
+                <a href="{{ url_for('users.user', page=1) }}" class="btn btn-outline-dark">First</a>
+                <a href="{{ url_for('users.user', page=page-1) }}" class="btn btn-outline-dark"><</a>
                 {% if page-2 >= 1 %}
-                    <a href="{{ url_for('products.product', page=page-2) }}"
+                    <a href="{{ url_for('users.user', page=page-2) }}"
                        class="btn btn-outline-dark">{{ page-2 }}</a>
                 {% endif %}
             {% endif %}
             <span>---Page {{ page }}---</span>
             {% if page < total_pages %}
                 {% if page+2 <= total_pages %}
-                    <a href="{{ url_for('products.product', page=page+2) }}" class="btn btn-outline-dark">
+                    <a href="{{ url_for('users.user', page=page+2) }}" class="btn btn-outline-dark">
                         {{ page+2 }}</a>
                 {% endif %}
-                <a href="{{ url_for('products.product', page=page+1) }}" class="btn btn-outline-dark">></a>
-                <a href="{{ url_for('products.product', page=total_pages) }}" class="btn btn-outline-dark">Last</a>
+                <a href="{{ url_for('users.user', page=page+1) }}" class="btn btn-outline-dark">></a>
+                <a href="{{ url_for('users.user', page=total_pages) }}" class="btn btn-outline-dark">Last</a>
             {% endif %}
         </div>
     </div>

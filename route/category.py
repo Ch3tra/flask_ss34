@@ -13,16 +13,22 @@ def category():
     page = request.args.get('page', 1, type=int)
 
     # Define the number of records per page
-    records_per_page = 10
+    records_per_page = 3
 
     # Calculate the offset based on the current page
     offset = (page - 1) * records_per_page
 
     # Use the helper function to execute the query
-    rows = execute_query("SELECT * FROM categories LIMIT ? OFFSET ?", (records_per_page, offset))
+    rows = execute_query("SELECT * FROM category LIMIT %s OFFSET %s", (records_per_page, offset))
 
-    # Calculate the total number of pages
-    total_records = execute_query("SELECT COUNT(*) FROM categories")[0][0]
+    # Get total count of records
+    total_records_query = "SELECT COUNT(*) FROM category"
+    total_records_result = execute_query(total_records_query)
+
+    # Extract the total count based on the structure of the result
+    total_records = total_records_result[0][0] if isinstance(total_records_result[0], (list, tuple)) else \
+        total_records_result[0]['COUNT(*)']
+
     total_pages = (total_records // records_per_page) + (total_records % records_per_page > 0)
 
     return render_template('admin/category/index.html', rows=rows, page=page, total_pages=total_pages)
@@ -44,7 +50,7 @@ def category_added():
             name = request.form['name']
             description = request.form['description']
 
-            query = "INSERT INTO categories (categoryName,categoryDesc) VALUES (?,?)"
+            query = "INSERT INTO category (categoryName,categoryDesc) VALUES (%s,%s)"
             params = (name, description)
 
             execute_query(query, params, is_insert=True)
@@ -63,7 +69,7 @@ def edit_category():
         page = request.form['page_id']
 
         # ** cid pass as parameter to prevent sql injection
-        query = f"SELECT * FROM categories WHERE categoryId = ?"
+        query = f"SELECT * FROM category WHERE categoryId = %s"
         rows = execute_query(query, (cid,))
 
         return render_template('admin/category/edit_category.html', rows=rows, page=page)
@@ -82,10 +88,10 @@ def category_edited():
             name = request.form['name']
             description = request.form['description']
 
-            query = f"UPDATE categories SET " \
-                    f"categoryName = ?, " \
-                    f"categoryDesc = ? " \
-                    f"WHERE categoryId = ?"
+            query = f"UPDATE category SET " \
+                    f"categoryName = %s, " \
+                    f"categoryDesc = %s " \
+                    f"WHERE categoryId = %s"
             params = (name, description, cid)
 
             execute_query(query, params, is_insert=True)
@@ -104,7 +110,7 @@ def delete_category():
             cid = request.form['cid']
             page_id = request.form['page_id']
 
-            query = f"DELETE FROM categories WHERE categoryId = ?"
+            query = f"DELETE FROM category WHERE categoryId = %s"
             execute_query(query, (cid,), is_insert=True)
 
             return redirect('/admin/category?page=' + page_id)

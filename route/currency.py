@@ -1,8 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, current_app
 from flask_login import login_required
-from werkzeug.utils import secure_filename
-import os
-import sqlite3 as sql
 from config import execute_query
 
 currencies = Blueprint('currencies', __name__)
@@ -22,10 +19,16 @@ def currency():
     offset = (page - 1) * records_per_page
 
     # Use the helper function to execute the query
-    rows = execute_query("SELECT * FROM currencies LIMIT ? OFFSET ?", (records_per_page, offset))
+    rows = execute_query("SELECT * FROM currency LIMIT %s OFFSET %s", (records_per_page, offset))
 
-    # Calculate the total number of pages
-    total_records = execute_query("SELECT COUNT(*) FROM currencies")[0][0]
+    # Get total count of records
+    total_records_query = "SELECT COUNT(*) FROM currency"
+    total_records_result = execute_query(total_records_query)
+
+    # Extract the total count based on the structure of the result
+    total_records = total_records_result[0][0] if isinstance(total_records_result[0], (list, tuple)) else \
+        total_records_result[0]['COUNT(*)']
+
     total_pages = (total_records // records_per_page) + (total_records % records_per_page > 0)
 
     return render_template('admin/currency/index.html', rows=rows, page=page, total_pages=total_pages)
@@ -49,7 +52,7 @@ def currency_added():
             symbol = request.form['symbol']
             rate = request.form['rate']
 
-            query = "INSERT INTO currencies (code,currencyName,currencySymbol,currencyRate) VALUES (?,?,?,?)"
+            query = "INSERT INTO currency (code,currencyName,currencySymbol,currencyRate) VALUES (%s,%s,%s,%s)"
             params = (code, name, symbol, rate)
 
             execute_query(query, params, is_insert=True)
@@ -68,7 +71,7 @@ def edit_currency():
         page = request.form['page_id']
 
         # ** cid pass as parameter to prevent sql injection
-        query = f"SELECT * FROM currencies WHERE currencyId = ?"
+        query = f"SELECT * FROM currency WHERE currencyId = %s"
         rows = execute_query(query, (cid,))
 
         return render_template('admin/currency/edit_currency.html', rows=rows, page=page)
@@ -90,13 +93,13 @@ def currency_edited():
             rate = request.form['rate']
             is_default = request.form['default']
 
-            query = f"UPDATE currencies SET " \
-                    f"currencyName = ?, " \
-                    f"code = ?, "\
-                    f"currencySymbol = ?, " \
-                    f"currencyRate = ?, " \
-                    f"is_default = ? " \
-                    f"WHERE currencyId = ?"
+            query = f"UPDATE currency SET " \
+                    f"currencyName = %s, " \
+                    f"code = %s, "\
+                    f"currencySymbol = %s, " \
+                    f"currencyRate = %s, " \
+                    f"is_default = %s " \
+                    f"WHERE currencyId = %s"
             params = (name, code, symbol, rate, is_default, cid)
 
             execute_query(query, params, is_insert=True)
@@ -115,7 +118,7 @@ def delete_currency():
             cid = request.form['cid']
             page_id = request.form['page_id']
 
-            query = f"DELETE FROM currencies WHERE currencyId = ?"
+            query = f"DELETE FROM currency WHERE currencyId = %s"
             execute_query(query, (cid,), is_insert=True)
 
             return redirect('/admin/currency?page=' + page_id)
