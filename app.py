@@ -34,23 +34,6 @@ app.register_blueprint(apiD)
 app.register_blueprint(auths, url_prefix='/auth')
 
 
-# ** create database
-# conn = sql.connect('student_ss34.db')
-# conn.execute('''
-# CREATE TABLE students (
-#     sid INTEGER PRIMARY KEY AUTOINCREMENT,
-#     firstName TEXT NOT NULL,
-#     lastName TEXT NOT NULL,
-#     birthday TEXT NOT NULL,
-#     gender TEXT NOT NULL,
-#     email TEXT NOT NULL,
-#     phoneNumber TEXT NOT NULL,
-#     subject TEXT NOT NULL
-# )
-# ''')
-# conn.close()
-
-
 @app.route('/')
 @app.route('/home')
 def home():

@@ -6,7 +6,7 @@ apiD = Blueprint('apiD', __name__)
 
 @apiD.route('/getAllProduct')
 def getAllProduct():
-    products = connection.execute(text('select * from product'))
+    products = connection.execute(text('select * from pproduct'))
     connection.commit()
 
     json_string = []
