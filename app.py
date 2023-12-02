@@ -1,7 +1,11 @@
+import requests
 from flask import Flask, render_template, request
 import randomname
 import random
 from flask_login import login_required
+
+from config import execute_query
+from route.apiFProduct import apiFD
 from route.apiProduct import apiD
 from route.auth import auths, login_manager
 from route.product import products
@@ -31,60 +35,18 @@ app.register_blueprint(currencies)
 app.register_blueprint(users)
 app.register_blueprint(categories)
 app.register_blueprint(apiD)
+app.register_blueprint(apiFD)
 app.register_blueprint(auths, url_prefix='/auth')
 
 
 @app.route('/')
 @app.route('/home')
 def home():
-    filter_category = request.args.get('filter_category', default="all", type=str)
-    products = []
-    categories = [
-        {
-            'id': 1,
-            'name': 'gaming',
-        },
-        {
-            'id': 2,
-            'name': 'professional',
-        },
-        {
-            'id': 3,
-            'name': 'office',
-        },
-        {
-            'id': 4,
-            'name': 'old-School',
-        },
-        {
-            'id': 5,
-            'name': 'weird-One',
-        }
-    ]
-
-    for item in range(20):
-        category = random.choice(categories)
-        products.append({
-            'id': 1,
-            'name': randomname.get_name(noun=('gaming', 'design')),
-            'price_big': 79,
-            'price_small': 99,
-            'category': category['name'],
-        })
-
-    product_filter = []
-    if filter_category == 'all' or filter_category == '':
-        product_filter = products
-    else:
-        for item in products:
-            if item['category'] == filter_category:
-                product_filter.append(item)
-
-    return render_template('index.html', products=product_filter, category=categories, filter_category=filter_category)
+    return render_template('index.html')
 
 
 # ** get product detail from product page and throw to product detail page
-@app.route('/product/<string:name>/<string:price_big>/<string:price_small>/<string:category>/<string:image>')
+@app.route('/product/<string:name>/<string:price>/<string:category>/<string:image>')
 def product(name, price_big, price_small, category, image):
     return render_template('product_details.html', name=name, category=category, price_big=price_big,
                            price_small=price_small, image=image)
