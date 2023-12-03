@@ -47,9 +47,8 @@ def home():
 
 # ** get product detail from product page and throw to product detail page
 @app.route('/product/<string:name>/<string:price>/<string:category>/<string:image>')
-def product(name, price_big, price_small, category, image):
-    return render_template('product_details.html', name=name, category=category, price_big=price_big,
-                           price_small=price_small, image=image)
+def product(name, price, category, image):
+    return render_template('product_details.html', name=name, category=category, price=price, image=image)
 
 
 @app.route('/pos')

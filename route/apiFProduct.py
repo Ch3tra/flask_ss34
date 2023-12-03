@@ -21,7 +21,6 @@ def getAllFProduct():
         products = execute_query(query)
 
     json_data = []
-    json_data_cate = []
 
     for product in products:
         json_data.append({
