@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 19, 2023 at 07:40 PM
+-- Generation Time: Dec 03, 2023 at 12:50 PM
 -- Server version: 5.7.36
 -- PHP Version: 7.4.26
 
@@ -131,14 +131,18 @@ CREATE TABLE IF NOT EXISTS `pcategory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) COLLATE utf8_unicode_520_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_520_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_520_ci;
 
 --
 -- Dumping data for table `pcategory`
 --
 
 INSERT INTO `pcategory` (`id`, `name`) VALUES
-(1, 'coca');
+(3, 'gaming'),
+(4, 'professional'),
+(5, 'office'),
+(6, 'old-school'),
+(7, 'weird-one');
 
 -- --------------------------------------------------------
 
@@ -163,18 +167,18 @@ CREATE TABLE IF NOT EXISTS `pproduct` (
 --
 
 INSERT INTO `pproduct` (`id`, `name`, `price`, `cost`, `image`, `cid`, `discount`) VALUES
-(1, 'coca', 1.5, 1, NULL, '1', '0'),
-(3, 'string', 2.3, 2, NULL, '1', '0'),
-(9, 'spy', 2.6, 1, NULL, '1', '10'),
-(5, 'abc', 3.2, 2, NULL, '1', '0'),
-(13, 'angkor', 3.5, 2.5, NULL, '1', '0'),
-(12, 'jinro', 3, 2, NULL, '1', '10'),
-(11, 'cambodia', 3.5, 2, NULL, '1', '15'),
-(14, 'tiger', 2.3, 1.5, NULL, '1', '5'),
-(15, 'anchor', 3.8, 2, NULL, '1', '5'),
-(16, 'singha', 2, 2, NULL, '1', '20'),
-(17, 'crown', 4, 3.5, NULL, '1', '0'),
-(18, 'bayon', 2, 2, NULL, '1', '0');
+(1, 'coca', 1.5, 1, NULL, '7', '0'),
+(3, 'string', 2.3, 2, NULL, '3', '0'),
+(9, 'spy', 2.6, 1, NULL, '6', '10'),
+(5, 'abc', 3.2, 2, NULL, '5', '0'),
+(13, 'angkor', 3.5, 2.5, NULL, '5', '0'),
+(12, 'jinro', 3, 2, NULL, '6', '10'),
+(11, 'cambodia', 3.5, 2, NULL, '4', '15'),
+(14, 'tiger', 2.3, 1.5, NULL, '7', '5'),
+(15, 'anchor', 3.8, 2, NULL, '4', '5'),
+(16, 'singha', 2, 2, NULL, '7', '20'),
+(17, 'crown', 4, 3.5, NULL, '3', '0'),
+(18, 'bayon', 2, 2, NULL, '5', '0');
 
 -- --------------------------------------------------------
 
