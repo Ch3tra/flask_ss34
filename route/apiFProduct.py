@@ -8,6 +8,11 @@ apiFD = Blueprint('apiFD', __name__)
 def getAllFProduct():
     filter_category = request.args.get('filter_category', default='all', type=str)
 
+    queryCate = """
+        SELECT * FROM pcategory
+    """
+    categories = execute_query(queryCate)
+
     query = """
         SELECT p.id, p.name, p.price, c.name AS category
         FROM pproduct p
@@ -21,6 +26,7 @@ def getAllFProduct():
         products = execute_query(query)
 
     json_data = []
+    json_data_cate = []
 
     for product in products:
         json_data.append({
@@ -30,4 +36,10 @@ def getAllFProduct():
             'category': product['category']
         })
 
-    return jsonify(products=json_data)
+    for category in categories:
+        json_data_cate.append({
+            'id': category['id'],
+            'name': category['name'],
+        })
+
+    return jsonify(products=json_data, categories=json_data_cate)

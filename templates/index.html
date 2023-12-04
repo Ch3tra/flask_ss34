@@ -20,14 +20,22 @@
         </a>
 
         <button
-                v-for="(category, index) in categories"
-                :key="index"
-                @click="filter_category(category)"
+                @click="filter_category(all)"
                 :class="{ 'btn btn-outline-primary ml-1 mr-1': true, 'active': filter_category === category }"
                 type="button"
                 style="text-transform: uppercase"
         >
-            [[ category ]]
+            all
+        </button>
+
+        <button
+                v-for="item in this.categories"
+                @click="filter_category(item.name)"
+                :class="{ 'btn btn-outline-primary ml-1 mr-1': true, 'active': filter_category === category }"
+                type="button"
+                style="text-transform: uppercase"
+        >
+            [[ item.name ]]
         </button>
 
     </div>
@@ -57,9 +65,7 @@
         el: '#app',
         delimiters: ["[[", ']]'],
         data: {
-            categories: [
-                'all', 'gaming', 'professional', 'office', 'old-school', 'weird-one'
-            ],
+            categories: [],
             product_list: [],
             filter_cate: null
         },
@@ -96,6 +102,7 @@
             axios.get(`http://127.0.0.1:5000/getAllFProduct`)
                 .then(response => {
                     this.product_list = response.data.products;
+                    this.categories = response.data.categories;
                     $.LoadingOverlay("hide");
                 })
                 .catch(error => {
