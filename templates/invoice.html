@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet'>
+</head>
+<style>
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row p-0 m-0">
+        <div class="col-12 p-0 m-0">
+            <center>
+{#                <img src="{{ server_url+'/static/image/logo.png' }}" class="rounded" style="width: 100px; height: 100px">#}
+                <img src="{{ server_url+'/static/img/title_logo.png' }}" class="rounded" style="width: 100px; height: 100px">
+                <h4>វិក្កយបត្រ</h4>
+                <h6>{{ now }}</h6>
+            </center>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm table-strip">
+            <thead>
+            <tr>
+                <th style="background-color: #cccccc">No.</th>
+                <th style="background-color: #cccccc">Description</th>
+                <th style="background-color: #cccccc">Quantity</th>
+                <th style="background-color: #cccccc">Price</th>
+                <th style="background-color: #cccccc">Sub Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in data %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.qty }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ (item.price) * item.qty }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="row p-0 m-0">
+        <div class="col-12 p-0 m-0">
+            <center>
+                <img
+                        src="{{ server_url+'/static/img/title_logo.png' }}"
+                        class="rounded"
+                        style="width: 200px; height: 200px"
+                >
+                <h5>ABA|00000000</h5>
+            </center>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

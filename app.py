@@ -1,19 +1,17 @@
-import requests
-from flask import Flask, render_template, request
-import randomname
-import random
+from flask import Flask, render_template
 from flask_login import login_required
 
-from config import execute_query
 from route.apiFProduct import apiFD
 from route.apiProduct import apiD
 from route.auth import auths, login_manager
+from route.pos import poss
 from route.product import products
 from route.student import students
 from route.customer import customers
 from route.user import users
 from route.category import categories
 from route.currency import currencies
+
 
 app = Flask(__name__)
 
@@ -36,6 +34,7 @@ app.register_blueprint(users)
 app.register_blueprint(categories)
 app.register_blueprint(apiD)
 app.register_blueprint(apiFD)
+app.register_blueprint(poss)
 app.register_blueprint(auths, url_prefix='/auth')
 
 
@@ -49,12 +48,6 @@ def home():
 @app.route('/product/<string:name>/<string:price>/<string:category>/<string:image>')
 def product(name, price, category, image):
     return render_template('product_details.html', name=name, category=category, price=price, image=image)
-
-
-@app.route('/pos')
-@login_required
-def pos():
-    return render_template('admin/pos.html')
 
 
 # ** handling 404
