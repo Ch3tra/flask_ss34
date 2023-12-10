@@ -16,7 +16,7 @@ def product():
     page = request.args.get('page', 1, type=int)
 
     # Define the number of records per page
-    records_per_page = 2
+    records_per_page = 6
 
     # Calculate the offset based on the current page
     offset = (page - 1) * records_per_page

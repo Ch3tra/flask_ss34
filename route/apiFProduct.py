@@ -9,18 +9,18 @@ def getAllFProduct():
     filter_category = request.args.get('filter_category', default='all', type=str)
 
     queryCate = """
-        SELECT * FROM pcategory
+        SELECT * FROM category
     """
     categories = execute_query(queryCate)
 
     query = """
-        SELECT p.id, p.name, p.price, c.name AS category
-        FROM pproduct p
-        JOIN pcategory c ON p.cid = c.id
+        SELECT p.productId, p.productName, p.productPrice, c.categoryName AS category
+        FROM product p
+        JOIN category c ON p.categoryId = c.categoryId
     """
 
     if filter_category != 'all':
-        query += " WHERE c.name = %s"
+        query += " WHERE c.categoryName = %s"
         products = execute_query(query, (filter_category,))
     else:
         products = execute_query(query)
@@ -30,16 +30,16 @@ def getAllFProduct():
 
     for product in products:
         json_data.append({
-            'id': product['id'],
-            'name': product['name'],
-            'price': product['price'],
+            'id': product['productId'],
+            'name': product['productName'],
+            'price': product['productPrice'],
             'category': product['category']
         })
 
     for category in categories:
         json_data_cate.append({
-            'id': category['id'],
-            'name': category['name'],
+            'id': category['categoryId'],
+            'name': category['categoryName'],
         })
 
     return jsonify(products=json_data, categories=json_data_cate)

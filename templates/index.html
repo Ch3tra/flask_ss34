@@ -74,8 +74,9 @@
         },
         methods: {
             filter_category(name) {
+                const encodedCategoryName = encodeURIComponent(name); // Encode the category name
                 if (name != 'all' && name != null) {
-                    axios.get(`http://127.0.0.1:5000/getAllFProduct?filter_category=${name}`)
+                    axios.get(`http://127.0.0.1:5000/getAllFProduct?filter_category=${encodedCategoryName}`)
                         .then(response => {
                             this.product_list = response.data.products;
                             $.LoadingOverlay("hide");

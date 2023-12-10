@@ -5,17 +5,17 @@ apiD = Blueprint('apiD', __name__)
 
 @apiD.route('/getAllProduct')
 def getAllProduct():
-    query = "SELECT * FROM pproduct"
+    query = "SELECT productId,productName,discount,productPrice,image FROM product"
     products = execute_query(query)
 
     json_string = []
     for product in products:
         json_string.append(
             {
-                'id': product['id'],
-                'name': product['name'],
+                'id': product['productId'],
+                'name': product['productName'],
                 'discount': product['discount'],
-                'price': product['price'],
+                'price': product['productPrice'],
                 'image': product['image'],
             }
         )
