@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from flask_login import login_required
+
 from config import execute_query
 
 apiFD = Blueprint('apiFD', __name__)

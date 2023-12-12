@@ -1,9 +1,13 @@
 from flask import Blueprint
+from flask_login import login_required
+
 from config import execute_query
 
 apiD = Blueprint('apiD', __name__)
 
+
 @apiD.route('/getAllProduct')
+@login_required
 def getAllProduct():
     query = "SELECT productId,productName,discount,productPrice,image FROM product"
     products = execute_query(query)
