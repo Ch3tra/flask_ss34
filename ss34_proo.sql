@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 10, 2023 at 09:47 AM
+-- Generation Time: Dec 15, 2023 at 11:46 AM
 -- Server version: 5.7.36
 -- PHP Version: 7.4.26
 
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   `discount` int(50) NOT NULL DEFAULT '0',
   PRIMARY KEY (`productId`),
   KEY `fk_product_category` (`categoryId`)
-) ENGINE=MyISAM AUTO_INCREMENT=49 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_520_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=71 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_520_ci;
 
 --
 -- Dumping data for table `product`
@@ -192,7 +192,11 @@ INSERT INTO `product` (`productId`, `categoryId`, `productName`, `productDesc`, 
 (45, 7, 'Portable Power Bank', 'Compact and high-capacity power bank for charging devices on the go.', 30, 'default_img', 49, NULL, 0),
 (46, 7, 'Smart Wi-Fi Plug', 'Intelligent Wi-Fi plug to control electronic devices remotely via smartphone.', 20, 'default_img', 35, NULL, 0),
 (47, 7, 'Noise-Canceling Headphones', 'Premium noise-canceling headphones with immersive sound quality.', 100, 'default_img', 179, NULL, 0),
-(48, 7, 'Ultra-Slim Laptop Sleeve', 'Sleek and protective laptop sleeve for slim and lightweight laptops.', 25, 'default_img', 45, NULL, 0);
+(48, 7, 'Ultra-Slim Laptop Sleeve', 'Sleek and protective laptop sleeve for slim and lightweight laptops.', 25, 'default_img', 45, NULL, 0),
+(53, 7, 'sdasdf', 'asdfsdfgsdfgsd', 2, '2sdasdf.jpg', NULL, NULL, 0),
+(55, 9, 'sdf', 'asdf', 3, 'sdf.jpg', NULL, NULL, 0),
+(56, 8, 'asd', 'sadf', 3, 'asd.jpg', NULL, NULL, 0),
+(70, 8, 'test', 'asdfasgerhas', 55, 'test.jpg', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
